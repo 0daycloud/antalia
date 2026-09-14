@@ -9,7 +9,7 @@ technical report. It is archived here so the parts that worked are not lost.
 - Foundation: https://huggingface.co/cloud0day3/antalia-1-foundation
 - Evaluation data: https://huggingface.co/datasets/cloud0day3/antalia-eval
 - Audio samples: https://0daycloud.github.io/antalia/
-- Paper: https://arxiv.org/abs/TODO
+- Paper: https://github.com/0daycloud/antalia/blob/main/paper/main.pdf
 - Contact: sezgin@patientdesk.ai or GitHub issues
 
 ## What it is
@@ -132,7 +132,7 @@ Community pull requests are accepted. There is no roadmap and no support SLA.
   title  = {Antalia 1: An Open Turkish Text-to-Speech Model from a Rights-Clean Pipeline},
   author = {Saygili, Sezgin and Kaplaner, Emre and Ozgul, Oncel and Koktas, Fikri San},
   year   = {2026},
-  note   = {arXiv:TODO},
+  note   = {Technical report},
   url    = {https://github.com/0daycloud/antalia}
 }
 ```

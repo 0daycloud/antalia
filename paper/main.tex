@@ -1,0 +1,339 @@
+\documentclass[10pt,twocolumn]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=20mm,columnsep=7mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage[hyphens]{url}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\setlist{nosep,leftmargin=*}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO(#1)]}}
+\newcommand{\antalia}{Antalia~1}
+\newcommand{\foundation}{Antalia~1 Foundation}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{\antalia: An Open Turkish Text-to-Speech Model from a Rights-Clean Pipeline,\\
+and Why Automated Speaker Similarity Was Not Enough}
+
+\author{%
+  Sezgin Saygili \and Emre Kaplaner \and Oncel Ozgul \and Fikri San Koktas\\[2pt]
+  Patientdesk.ai\\
+  \texttt{sezgin@patientdesk.ai}%
+}
+
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We release \antalia, a $\sim$300M-parameter Turkish text-to-speech (TTS) model, together with its speaker-agnostic base \foundation, the training and inference code, and an evaluation suite. The model is a character-conditioned rectified-flow acoustic model over 100-band log-mel spectrograms at 24\,kHz, vocoded with the frozen public BigVGAN~v2. Every training sample was either taken from a public corpus with a compatible license (Common Voice, FLEURS) or recorded from one professional Turkish voice actor under an explicit redistribution agreement; nothing was scraped. On a 120-prompt Turkish suite, \antalia\ reaches a Whisper-large-v3 character error rate (CER) of 0.0528 with a single seed and 0.0298 with best-of-8 seed selection, at an automated WavLM speaker similarity of 0.93--0.94 to the target voice. The same release report must also state its central negative result: in a controlled comparison against real recordings, a native listener who knows the voice judged the synthetic and real speech to be the same person in 0 of 12 anchored pairs, while the automated similarity score sat at 0.91--0.94 throughout. The mismatch was traced to a $+4.0$\,dB excess in the 4.7--6.8\,kHz band of the synthetic voice. We document the full training lineage, the inference stack that made the numbers possible, the experiments that failed (a FastPitch baseline, two diverged foundation runs, reference-audio infilling, a differentiable speaker-consistency loss, a found-audio acquisition pilot), and the limitations of what is released. Development of the project has been discontinued; this document is the release report, not a roadmap. Weights are published under OpenRAIL-M and code under Apache-2.0.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Turkish is a large language with comparatively few open, high-quality neural TTS voices. This project set out to build one flagship Turkish voice for a conversational product, under two constraints that shaped every later decision: the voice had to belong to a single consenting speaker whose recordings could be redistributed as open weights, and no training audio could be acquired by scraping. Within those constraints we trained a flow-matching acoustic model from scratch on public Turkish corpora, specialized it to the consented speaker, and built the inference and evaluation tooling around it.
+
+The product for which the voice was built was cancelled, and development of the model stopped before the planned follow-up retune. Rather than let the artifacts disappear, we are releasing them as they are, with this report as their documentation. The report is written to be useful to two audiences: people who want to run or fine-tune the model, and people who want to know what a small team learned about identity, evaluation and rights-clean data while building it.
+
+\paragraph{Contributions.}
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{\antalia}: a fine-tuned single-voice Turkish TTS model (304,552,293 parameters), and \textbf{\foundation}: the speaker-agnostic base it was derived from (299,623,013 parameters), both released as \code{safetensors} with a self-describing \code{config.json} (Section~\ref{sec:release}).
+  \item An independent implementation of a CrossFlow-style rectified-flow TTS architecture with a total-duration head instead of an aligner, speaker and prosody conditioning through zero-initialized projections, and a zero-initialized residual speaker-style adapter (Section~\ref{sec:model}).
+  \item A rights-first data pipeline: Common Voice and FLEURS filtering with dual-ASR verification, and a consented-speaker recording pipeline with PII scanning and speaker-consistency gates; a documented negative result on public-domain ``found audio'' for Turkish (Section~\ref{sec:data}).
+  \item A complete six-stage training lineage with per-stage hyperparameters and data volumes (Section~\ref{sec:training}) and an inference stack---clause chunking, a per-character rate floor, and best-of-8 seed selection with a composite verifier score---without which the headline numbers do not hold (Section~\ref{sec:inference}).
+  \item Automatic and human evaluation, including a CMOS session in which automated speaker similarity of 0.91--0.94 coincided with a 0/12 same-person judgment by a native listener (Sections~\ref{sec:eval} and \ref{sec:human}), and the spectral analysis that explained it.
+  \item An explicit account of what was tried and abandoned (Section~\ref{sec:negative}), a limitations and intended-use statement (Section~\ref{sec:limitations}), and lessons for anyone attempting a similar project (Section~\ref{sec:lessons}).
+\end{enumerate}
+
+\paragraph{Status.} Development is discontinued. The weights are released as-is; community pull requests to the code repository are accepted, but there is no roadmap and no hosted service. Nothing described here is running as an API.
+
+\paragraph{On the name.} ``Antalia'' is an unregistered project name. An unrelated Italian business operates as ``ANTALIA AI''; there is no connection.
+
+\section{Data}
+\label{sec:data}
+
+All training audio comes from three sources: Mozilla Common Voice~26.0 Turkish~\citep{ardila2020commonvoice}, FLEURS Turkish~\citep{conneau2023fleurs}, and studio recordings of one professional Turkish voice actor made for this project. No audio was scraped from the web, and a pilot study of public-domain sources (Section~\ref{sec:found-audio}) concluded that none was usable.
+
+\subsection{Public corpora and filtering}
+\label{sec:public-data}
+
+From the Common Voice~26.0 Turkish validated split, 120,407 clips were decoded and content-hashed. Of these, 112,909 clips entered the ASR verification stage, where each clip was transcribed with Whisper-large-v3~\citep{radford2023whisper} forced to Turkish and compared with its prompt text. Accepted clips have a median CER of 0 against their prompts, with p90 0.111 and p95 0.231. Rejections by gate were: 7,098 clips with insufficient active audio, 1,449 transcript mismatches, 356 too short, 351 too low in level, 5 low SNR, and 4 clipping. From FLEURS Turkish, 3,607 clips passed validation.
+
+The foundation training manifest (Section~\ref{sec:training}) contains 59,593 Common Voice clips and 1,876 FLEURS clips, 61,469 clips and 67.55\,h in total. The manifest is a subset of the accepted pool; the filter manifests and QA reports that record the exact selection are part of the planned evaluation dataset repository (Section~\ref{sec:release}). The Common Voice speaker-ID vocabulary used in later stages contains roughly 737 speakers.
+
+Per-band mel normalization statistics (mean and standard deviation per mel band) were measured on 256 training records, 89,966 frames, and are shipped inside the release \code{config.json}.
+
+\subsection{Consented voice recordings}
+\label{sec:voice-data}
+
+The released voice belongs to one professional Turkish voice actor. She recorded from machine-generated, PII-free scripts in a fixed studio setup (same microphone, room and mouth distance across sessions; 48\,kHz/24-bit masters) and signed a redistribution addendum that explicitly covers open-weight release of a model trained on her recordings. She is credited anonymously at her request. Her raw recordings are not released.
+
+Two recording campaigns contribute to the released model. The first scripted campaign yielded 621 script-aligned segments (2.965\,h) across six script categories; it was the only voice data through training stages~3--5. A second, targeted campaign (in-context dialogue turns, graded expressive intensity, long-form monologues with natural pausing, and telephone-style readbacks of numbers and codes) was designed after the human evaluation in Section~\ref{sec:human} and partially recorded before development stopped. The corrected recordings from campaign~1 plus the completed part of campaign~2 total 1,073 segments (5.008\,h); this set trained the final adapter stage.
+
+\paragraph{Labeling and QA pipeline.} Every recorded take passed through: (i)~dual-ASR consensus using Whisper-large-v3 and a wav2vec~2.0 XLSR-53 Turkish CTC model~\citep{baevski2020wav2vec2}, (ii)~CTC forced alignment to the script for segmentation, (iii)~a spoken-PII scan using Turkish named-entity recognition from Stanza~\citep{qi2020stanza}, (iv)~a speaker-consistency gate on WavLM speaker-verification embeddings~\citep{chen2022wavlm} to catch mislabeled or off-mic takes, and (v)~acoustic gates on SNR, clipping and level. The same acoustic gates are used on the public corpora.
+
+\paragraph{Evaluation contamination.} All evaluation prompts were deduplicated against every training manifest. One collision was found and excluded from the evaluation suite.
+
+\subsection{Found-audio pilot (negative result)}
+\label{sec:found-audio}
+
+Before committing to a second recording campaign, we ran a bounded pilot of the two public-domain source families that would have been rights-compatible for Turkish single-speaker audio. LibriVox Türkçe: the LibriVox API's language filter silently returns the general catalogue, and an authoritative query against \code{archive.org} (\code{collection:librivoxaudio AND language:(Turkish)}) returned 0 items. VOA Türkçe: the discoverable audio RSS inventory was one zone of 10 episodes totalling 1.63\,h; a sample episode measured an estimated SNR of 32.6\,dB (the accepted training corpus averages above 45\,dB), and the content was multi-speaker field reporting. The pilot concluded ``no-go'': public-domain Turkish single-speaker audio at scale does not exist in these sources, and the consented recording campaign was the only viable data path.
+
+\section{Model}
+\label{sec:model}
+
+\antalia\ is an independent implementation of a CrossFlow-style architecture: a character-conditioned rectified-flow model~\citep{lipman2023flow,liu2023rectified} that predicts velocity fields over normalized log-mel frames, with a Transformer decoder~\citep{vaswani2017attention} that cross-attends to a text encoder. The design is in the family popularized by F5-TTS~\citep{chen2024f5tts}, but the implementation does not use or depend on F5-TTS or FreyaTTS weights, code, audio or data.
+
+\subsection{Acoustic representation}
+
+Audio is represented as 100-band log-mel spectrograms at 24\,kHz with FFT size 1024, hop 256 and window 1024 (93.75 frames/s), $f_{\min}=0$, $f_{\max}=12$\,kHz. Each band is normalized by its training-set mean and standard deviation and clipped to $\pm 5.0$. Per-band normalization was introduced after two earlier foundation runs diverged (Section~\ref{sec:negative}); the normalized run is the one that survived.
+
+\subsection{Text front-end and encoder}
+
+Input is graphemes, not phonemes. A deterministic Turkish normalizer expands numbers, ordinals, dates, times, currency, percentages and abbreviations into words and applies Turkish-aware lowercasing (dotted/dotless~\textit{i}). For example, \textit{``Sn.\ Yılmaz'ın 3.\ randevusu 07.08.2026'da saat 09:07'de''} becomes \textit{``sayın yılmaz'ın üçüncü randevusu yedi ağustos iki bin yirmi altı'da saat dokuz sıfır yedi'de''}, and initialisms such as \textit{TCMB} are spelled out letter by letter. The text encoder is a character embedding plus sinusoidal positions followed by four ConvNeXt-style blocks~\citep{liu2022convnext} with depthwise convolutions of kernel size~7, at dimension 768.
+
+\subsection{Duration}
+
+There is no aligner and no per-token duration predictor. A single scalar head on the pooled text encoding predicts the log of the total number of mel frames. The prediction is trained with an MSE loss on log frame count with weight 0.1 relative to the flow loss. At inference the predicted total is the length of the noise sequence to be denoised. This is the simplest possible duration model; its failure mode on long inputs is discussed in Section~\ref{sec:inference}.
+
+\subsection{Acoustic decoder}
+
+The decoder is a stack of 16 Transformer blocks at dimension 768 with 12 attention heads. Each block has, in order: self-attention over mel frames, cross-attention over text tokens, and a SwiGLU feed-forward network~\citep{shazeer2020glu} with inner dimension 3072. Following DiT~\citep{peebles2023dit}, each block is modulated by the timestep context through an adaLN-style 9-way projection (shift, scale and gate for each of the three sub-layers); the modulation projection is zero-initialized so that each block starts as an identity residual. The output projection to mel space is also zero-initialized. Training uses the rectified-flow objective: with $x_1$ the clean normalized mel, $x_0 \sim \mathcal{N}(0, I)$ and $t \sim \mathcal{U}(0,1)$, the model sees $x_t = (1-t)x_0 + t x_1$ and regresses the velocity $x_1 - x_0$ with a frame-masked MSE.
+
+\subsection{Conditioning}
+
+The foundation model is text-only. In the fine-tuning stages two additional conditions are added to the timestep context through zero-initialized projections, so that the foundation's behaviour is preserved exactly at initialization:
+\begin{itemize}
+  \item a \textbf{speaker embedding} table of dimension 256 covering the $\sim$737 Common Voice speaker identities plus the released voice, with id~0 reserved for ``unconditioned'';
+  \item a 6-dimensional \textbf{prosody feature vector}: log seconds per character, log energy mean and standard deviation, log $F_0$ mean and standard deviation, and voiced ratio. At inference these are supplied from named presets derived from the voice actor's recordings (\code{prosody-presets.json}).
+\end{itemize}
+Classifier-free guidance~\citep{ho2022cfg} is applied independently on text (guidance scale 4.0 in the release recipe) and on speaker (scale 1.0), which is why the CFG fine-tuning stage trains with null-text and unconditioned-speaker rows.
+
+\subsection{Speaker-style adapter}
+
+The final training stage adds a zero-initialized bottleneck adapter to every decoder block: layer norm, a down-projection to dimension 128, a learned style vector added in the bottleneck, SiLU, and an up-projection whose weights and bias start at zero. The adapter output is added residually after the feed-forward sub-layer and can be scaled or switched off at runtime, which is how the ``foundation-output preservation'' term in Section~\ref{sec:training} is computed. There are 64 adapter tensors totalling 3,160,832 parameters; these were the only trainable parameters in the final stage, and their EMA weights are what ship in \antalia.
+
+\subsection{Sampling and vocoder}
+
+Sampling uses an Euler solver with 32 steps and sway sampling~\citep{chen2024f5tts} with coefficient $-0.8$, which concentrates steps at low $t$. A 16-step variant is discussed in Section~\ref{sec:inference}. The mel output is inverted with BigVGAN~v2 (24\,kHz, 100-band, $256\times$)~\citep{lee2023bigvgan}, used frozen and not redistributed: the loader pulls \code{nvidia/bigvgan\_v2\_24khz\_100band\_256x} (MIT) from the Hub at a pinned source commit with a one-line \code{huggingface\_hub} compatibility patch. On real-mel reconstruction the vocoder is transparent to within $\pm0.4$\,dB per band, which mattered when attributing the timbre error in Section~\ref{sec:human}.
+
+\section{Training lineage}
+\label{sec:training}
+
+\antalia\ is the end of a six-stage lineage, summarized in Table~\ref{tab:lineage}. All stages ran on a single A100-80GB. The foundation stage used AdamW~\citep{loshchilov2019adamw} with weight decay 0.01, gradient clipping at 1.0 and an EMA of the weights with decay 0.9999; both released checkpoints are EMA weights. Learning rates and data for the later stages are given where they were recorded; a dash in the table means the value was not recorded in the release brief.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\caption{Training lineage. All runs on one A100-80GB. ``Voice'' is the released voice actor. LR is peak learning rate; --- means not recorded in the release brief.}
+\label{tab:lineage}
+\begin{tabular}{@{}lp{3.0cm}rrp{5.4cm}p{4.6cm}@{}}
+\toprule
+\# & Stage & Updates & LR & Data & Trainable / notes \\
+\midrule
+1 & Foundation v3, normalized & 100,000 & $10^{-4}$ & 61,469 clips / 67.55\,h: 59,593 Common Voice~26.0 TR + 1,876 FLEURS TR & Full model from clean init; AdamW wd 0.01, grad clip 1.0, EMA 0.9999; warmup 2,000, cosine to $10^{-5}$; 6,000 frames/GPU per batch ($\le$32 samples, $\le$24\,s each); seed 20260805. Released as \foundation. \\
+2 & Speaker-conditioned continuation & 3,000 & --- & Common Voice speaker ids only & Only new speaker embeddings and projections trainable. \\
+3 & Voice specialization & 100 & --- & 621 voice segments / 2.965\,h & Appends one speaker embedding for the voice. \\
+4 & CFG fine-tune & 8,000 & $2\times10^{-5}$ & 41,277 CV clips + 621 voice segments (46.96\,h) & 15\% null-text rows, 10\% unconditioned-speaker rows; text encoder and duration head frozen. \\
+5 & Consistency fine-tune (``v5'') & 6,000 & $2\times10^{-5}$ & 47,487 records / 73.6\,h: voice's 621 segments upweighted $10\times$ (6,210 rows) + 41,277 CV replay rows & Text/speaker dropout 0.1. Update 6,000 is the ``v5'' champion deployed to staging and evaluated in Section~\ref{sec:human}. \\
+6 & Timbre adapter & 1,400 & $10^{-4}$ & 1,073 corrected voice segments / 5.008\,h (campaign~1 + partial campaign~2) & Adapter only (3,160,832 params); 1,600 max updates, update 1,400 best; foundation-output preservation weight 0.5. \textbf{Released as \antalia.} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\paragraph{Stage 1: foundation.} The foundation was trained from a clean initialization for 100,000 updates at peak learning rate $10^{-4}$ with 2,000 warmup steps and cosine decay to $10^{-5}$, on batches of 6,000 mel frames per GPU (at most 32 samples of at most 24\,s each), seed 20260805, on the 61,469-clip public manifest of Section~\ref{sec:public-data}. Two earlier foundation attempts (v1, v2) diverged and were abandoned (Section~\ref{sec:negative}); v3 added per-band mel normalization and is the surviving base. Its update-100,000 EMA weights are released as \foundation.
+
+\paragraph{Stages 2--3: adding speakers.} The speaker embedding table and its projection were added and trained alone for 3,000 updates on Common Voice speaker identities. A single embedding row for the released voice was then appended and trained for 100 updates on her first-campaign 621 segments.
+
+\paragraph{Stage 4: calibrated guidance.} To make classifier-free guidance well-behaved, the model was fine-tuned for 8,000 updates at learning rate $2\times10^{-5}$ on 41,277 Common Voice clips plus the 621 voice segments (46.96\,h) with 15\% of rows given null text and 10\% given the unconditioned speaker id. The text encoder and duration head were frozen.
+
+\paragraph{Stage 5: consistency.} The voice's 621 segments were upweighted $10\times$ (6,210 rows) against 41,277 Common Voice replay rows (47,487 records, 73.6\,h) and the model was fine-tuned for 6,000 updates at $2\times10^{-5}$ with text and speaker dropout 0.1. The resulting checkpoint (``v5'') was the engineering champion and the system evaluated by the human listener in Section~\ref{sec:human}.
+
+\paragraph{Stage 6: timbre adapter.} After the human evaluation localized the identity gap to timbre, a residual adapter was trained on the corrected and expanded voice corpus (1,073 segments, 5.008\,h) for 1,400 updates at $10^{-4}$, with all other weights frozen. A preservation term---the masked MSE between the adapter model's velocity and the same model's velocity with the adapter scaled to zero, weight 0.5---kept the adapter from drifting away from the foundation's pronunciation. Update 1,400 (of a 1,600 maximum) was best and is released as \antalia.
+
+\paragraph{Infrastructure.} The 300M-parameter model trained in bf16 with activation checkpointing at roughly 45--50\,GB peak memory, so a single 80\,GB A100 sufficed throughout and multi-GPU training never became a dependency. Batches were formed by a duration-bucketed sampler (grouping clips by audio length), which kept step times stable and avoided out-of-memory failures. Every fine-tune carried a validation-degradation guard that aborts the run and leaves the parent checkpoint untouched when validation loss degrades for consecutive evaluations (Section~\ref{sec:negative}). EMA weights were maintained throughout, and both serving and further fine-tuning started from EMA weights rather than raw ones. Every synthesis and quality report records the SHA-256 of the checkpoint, the vocoder revision and the flag set used, so each audio artifact in the repository is traceable to exact weights.
+
+\section{Inference stack}
+\label{sec:inference}
+
+The quality numbers in Section~\ref{sec:eval} are those of a system, not a bare checkpoint. The release recipe (\code{inference-recipe.json}) fixes the following.
+
+\paragraph{Clause-boundary chunking.} The single-scalar duration head under-budgets long inputs. Measured speaking rate on long text was 0.0635\,s per character against 0.083\,s per character in the speaker's natural speech, about 35\% too fast: the head was trained on short Common Voice clips and, being a single learned scalar, fails out of distribution quietly, so the flow crams syllables and smears them. On a 370-character input, unchunked synthesis predicted a total of 9.1\,s of rushed, mumbled speech, whereas the same text synthesized in chunks totals 34.8\,s. Inputs are therefore split at sentence and comma boundaries into chunks of at most 120 characters (an in-distribution length), each chunk is synthesized independently, and chunks are joined with a fixed 160\,ms pause. Two long-form measurements exist, on different metrics and recipe snapshots, and we report both: chunking alone took long-form CER from 23.1\% to 4.1\%, and chunking plus the rate floor below took long-form CER from 23.9\% to 4.1\% and WER from 42.9\% to about 11\% (all Whisper-large-v3, single seed); the recipe-v4 long-form measurement recorded WER falling from 36.6\% to 10.7\% (single seed). Neither was re-measured for the final recipe.
+
+\paragraph{Rate floor.} Independently of chunking, a chunk's frame budget may not imply speech faster than 0.085\,s per non-space character, whatever the duration head predicts. This removes the residual under-budgeting on short chunks.
+
+\paragraph{Guidance and clamp.} Three scalar knobs were set by single-seed sweeps against the evaluation suite: text guidance 4.0 pushes the mel off the trained manifold at peaks, so the normalized mel is clamped to $\pm5.0$ (five standard deviations) before vocoding, which reduced the clipping ratio about $3\times$; a guidance rescale of 0.5 (matching the guided output's standard deviation back to the conditioned branch) together with the clamp took sweep CER from 0.0934 to 0.0867 and raised SNR by about 4\,dB, at the cost of slightly softened output, and is enabled in the serving recipe. Sway coefficient $-0.8$ came from the same sweeps. None of these require retraining.
+
+\paragraph{Prosody presets.} The 6-dimensional prosody vector is served from per-category centroids computed on the voice actor's real segments grouped by recording category (\code{prosody-presets.json}), with an optional keyword router that picks a preset per chunk (question clauses, apology keywords). Presets cost essentially nothing in intelligibility: CER 4.88\% with presets against 4.89\% without, at identical speaker similarity; a guardrail sweep showed full-strength presets cost at most 1 percentage point CER except one, which is capped at strength 0.7.
+
+\paragraph{Best-of-8 seed selection.} Single-seed variance is large (Section~\ref{sec:eval}). The recipe optionally synthesizes 8 seeds per chunk and keeps the candidate maximizing
+\begin{equation}
+  s = \mathrm{sim} - 1.0\cdot\mathrm{CER} - 0.05\cdot P_{\mathrm{env}} - 0.05\cdot P_{\mathrm{timbre}},
+  \label{eq:score}
+\end{equation}
+where $\mathrm{sim}$ is the cosine similarity between WavLM-base-plus-sv x-vectors~\citep{chen2022wavlm} of the candidate and the voice actor's reference recordings, $\mathrm{CER}$ is the Whisper-large-v3 character error rate of the candidate against the normalized input text, $P_{\mathrm{env}}$ is an $F_0$-envelope penalty (z-score of log-$F_0$ mean, spread and voiced ratio against the distribution of the real recordings; \code{envelope-stats.json}), and $P_{\mathrm{timbre}}$ is a level-normalized 11-band spectral-shape distance, z-scored against 13 real clips of the voice (\code{timbre-profile.json}). The envelope term exists because the verifier is blind to ``right speaker, wrong persona'' takes; on the consistency champion it raised pre-selection p10 similarity from 0.891 to 0.912 after gating. The timbre term was added after the human evaluation (Section~\ref{sec:human}); its weight 0.05 was chosen by a sweep on a frozen 8-seed set. Measured on the consistency champion before the timbre gate, best-of-4 selection took CER from 8.18\% to 5.42\%, WER from 17.0\% to 12.7\% and p10 similarity from 0.8603 to 0.909. Seeds are deterministic, so selected metrics are reproducible.
+
+The $N$ seeds are rendered in one batched flow pass (padded mixed lengths, per-row noise, shared conditioning), so the wall-clock cost of eight candidates is well below $8\times$: across the 120-prompt suite, 8 candidates took 145\,s against 95\,s for one, about $1.5\times$, before the Whisper and WavLM scoring passes per candidate. The flow-model work itself is still eight times a single generation.
+
+\paragraph{16-step variant.} Halving the Euler steps from 32 to 16 reduced generation time by 45.1\% and left mean speaker similarity within 0.0006 of the 32-step result, but lowered p10 similarity. The release recipe keeps 32 steps; one 16-step sample is included in the gallery.
+
+\paragraph{Timings.} On an A100 with a resident model, a 5\,s utterance at 32 steps takes about 2.1--2.3\,s after warm-up; the first request takes about 6\,s. The cancelled staging deployment on Cloud~Run L4 measured time-to-first-audio p50 5.0\,s and p95 9.2\,s at low load. No latency optimization beyond the 16-step experiment was done.
+
+\section{Automatic evaluation}
+\label{sec:eval}
+
+\paragraph{Suite.} \code{turkish-v2} contains 120 prompts in 10 categories of 12: acknowledgement, emotional style, voice-agent turns, questions and confirmations, long form, general, names and places, numeric, foreign terms and abbreviations, and adversarial normalization. A separate pronunciation suite (\code{turkish-pronunciation-v1}) is released but was not used for the headline numbers. Metrics are Whisper-large-v3 CER and WER against the normalized prompt text, and WavLM x-vector cosine similarity to the voice actor's real recordings. All numbers below are on this suite.
+
+\paragraph{Scoring normalization.} Whisper transcribes spoken numbers as digits (\textit{``üç bin yedi yüz''} becomes \textit{3700}) while the reference text has the words. Before the evaluator applied its own scoring normalization (spelling out digits, decimals and thousands groups the way the language speaks them, in the evaluator only, training text untouched), the numeric category read 41.5\% CER; after it, about 2.7\% CER and 7.4\% WER on the same audio. A ``numbers fine-tune'' that had been planned on the strength of the first figure was cancelled. All numbers in this report use the normalized scorer.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Automatic evaluation on \code{turkish-v2} (120 prompts). CER/WER: Whisper-large-v3 against normalized text. Sim: WavLM x-vector cosine similarity to the released voice. Rows in bold are the released model. $^*$The foundation never saw the released voice; its similarity is reported only as the verifier's floor.}
+\label{tab:auto}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+System & CER mean & CER p90 & WER mean & Sim mean & Sim p10 \\
+\midrule
+Foundation v3 @100k, unconditioned, single seed & 0.1835 & 0.4049 & 0.3952 & 0.8162$^*$ & 0.625$^*$ \\
+v5 consistency @6000, single seed & 0.0840 & 0.2325 & 0.1870 & 0.9315 & 0.8913 \\
+v5 best-of-8 (timbre-gated, $w=0.05$) & 0.0375 & 0.1127 & 0.1059 & 0.9423 & 0.9113 \\
+\textbf{\antalia\ (adapter v2 @1400), single seed} & \textbf{0.0528} & \textbf{0.1348} & \textbf{0.1297} & \textbf{0.9331} & \textbf{0.9054} \\
+\textbf{\antalia\ best-of-8 (timbre-gated)} & \textbf{0.0298} & \textbf{0.1007} & \textbf{0.0934} & \textbf{0.9445} & \textbf{0.9170} \\
+\midrule
+Abandoned: infill/reference conditioning u4000 & 0.6977 & 0.9517 & 0.9826 & 0.9524 & 0.9271 \\
+Abandoned: context-full v1 @6000 (16 steps) & 0.0761 & --- & 0.1773 & 0.9393 & 0.8918 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\paragraph{Results.} Table~\ref{tab:auto} gives the main comparison. The single-seed adapter model (\antalia) has a CER of 0.0528 against 0.0840 for the v5 consistency champion, and best-of-8 selection brings it to 0.0298 (WER 0.0934). Automated speaker similarity moves little across the fine-tuned systems (0.9315--0.9445 mean, 0.8913--0.9170 p10); as Section~\ref{sec:human} shows, this metric should not be read as evidence of identity. The best-of-8 \antalia\ output has a mean timbre penalty of 1.997 (v5 best-of-8: 2.182), still outside the range of real recordings, 0.47--0.98. Its mean envelope penalty is 1.358. Estimated SNR of the synthesized audio is about 50\,dB.
+
+\paragraph{Per-prompt spread.} Seed selection matters most on the hardest categories. Examples from the released gallery: \code{normalization-005} (an e-prescription number with a date and an honorific) goes from CER 0.32 with the default seed to 0.13 with the selected seed; \code{foreign-006} (Bluetooth, iPhone, podcast) from 0.24 to 0.04. Some prompts do not recover on any of the 8 seeds: \code{normalization-012} stays at 0.23 and \code{numeric-002} at 0.13. Across seeds the per-prompt CER spread reaches 0.0 to 0.17, which is why single-seed numbers should be treated as a distribution, not a point.
+
+\paragraph{Long form.} The unchunked-vs-chunked pair described in Section~\ref{sec:inference} (9.1\,s vs 34.8\,s for the same 370-character input) is included in the gallery as audio. The long-form improvements (CER 23.9\% to 4.1\%; WER 42.9\% to about 11\%; and, in the recipe-v4 measurement, WER 36.6\% to 10.7\%) were all measured single-seed before the timbre term and the adapter existed and were not re-measured for the final recipe.
+
+\section{Human evaluation}
+\label{sec:human}
+
+\paragraph{Protocol.} A comparison mean opinion score (CMOS) session was run on 2026-08-09 on the v5 consistency champion with the gated (best-of-8) serving recipe. The listener was a single native Turkish speaker---the project owner, who knows the voice actor's voice and the study design. The session had 27 non-catch trials in two pools: an A/B pool comparing the gated recipe against plain single-seed synthesis ($n=15$), and an anchored pool comparing synthesis against real recordings of the voice actor ($n=12$), each with a same-person judgment. Anchored pairs used different content on the two sides, i.e.\ the harder, product-realistic identity test. Three catch trials were all clean (0 non-zero ratings), so the ratings are treated as attentive.
+
+\paragraph{Results.} Pooled over all 27 non-catch trials, CMOS was $-0.667 \pm 0.653$ (95\% CI) toward the candidate. Gated vs.\ plain: $+0.267 \pm 0.728$ ($n=15$). Anchored synthetic vs.\ real: $-1.833 \pm 0.757$ ($n=12$). \textbf{Same-person rate on anchored pairs: 0/12.} Per category, the CMOS toward the candidate was: emotion $+2.0$, general $+2.0$, questions $+0.2$, acknowledgement $0.0$, long form $-0.5$, names and places $-1.0$, voice agent $-1.0$, foreign terms $-1.14$, numeric $-2.0$, normalization $-2.5$.
+
+All three promotion criteria of the protocol failed: pooled CMOS was negative, the anchored same-person rate was 0\% against a required $\ge$95\%, and five categories were at or below $-1.0$. The model was not promoted as a launch voice.
+
+\paragraph{What the result means.} Throughout this session the automated verifier reported speaker similarity of 0.91--0.94 for the same audio. A listener who knows the voice said ``not the same person'' on every one of twelve pairs. We therefore treat WavLM x-vector similarity in this regime as saturated and uninformative for the claim ``this is her voice''; it still separates the foundation (0.8162) from the fine-tuned models and remains useful as a selection signal, but it cannot certify identity. The gated recipe was directionally better than plain synthesis ($+0.27$, CI overlapping zero), so the inference stack was not the problem; the model's identity and pronunciation ceiling was.
+
+\paragraph{Timbre analysis.} The listener localized the anchored failure to voice tone alone (``everything else sounds like the same person''). A band-spectrum comparison of the evaluation pack against real recordings confirmed it: the synthetic voice carries a $+4.0$\,dB excess in the 4.7--6.8\,kHz band ($z=+3.5$ relative to the real voice's own variability) plus a tilt in the formant region. Because the vocoder reconstructs real mels to within $\pm0.4$\,dB, the acoustic model owns the error.
+
+\paragraph{Response.} Two changes followed. First, the timbre penalty of Eq.~\eqref{eq:score}: an 11-band level-normalized spectral-shape distance z-scored against 13 real clips, which separated real clips (0.47--0.98) from synthetic ones (1.42--3.26) with no overlap on that pack. A weight sweep on the frozen 8-seed set chose $w=0.05$, moving the mean penalty from 2.585 to 2.182 and changing 44 of 120 picks at a cost of $+0.1$ percentage points CER; the owner A/B-listened to the five largest switches and judged the new picks closer to the real voice. Second, the adapter stage of Section~\ref{sec:training}, which brought the best-of-8 mean penalty to 1.997. That is still outside the real range, and no CMOS session was run on the adapter model that is released.
+
+\paragraph{Caveats, stated plainly.} This is one informed listener, not a panel. The listener knew the study design and the voice. Real clips carry a room and microphone signature that an informed ear can use. We do not believe any of these plausibly turns 0/12 into a pass, but they do mean the CMOS values themselves should not be quoted as population estimates. A $\ge$3-listener CMOS v2 protocol with fresh trials was designed and was never run. \textbf{No multi-listener MOS or CMOS exists for any version of this model.}
+
+\section{Negative results}
+\label{sec:negative}
+
+We list what was tried and abandoned, with the measurements that led to each decision.
+
+\paragraph{FastPitch baseline.} The first system (2026-08-01) was a FastPitch~\citep{lancucki2021fastpitch} model adapted to 3.48\,h of the voice actor's data and evaluated on a 39-prompt predecessor suite. Conversational categories reached CER 0.27--0.32 with identity holding (mean similarity 0.809), but names and places (CER 0.578), numeric (0.607), foreign terms and abbreviations (0.714) and adversarial normalization (1.066) were broken. The normalizer expanded every adversarial prompt correctly; the acoustic model produced fluent word salad on spelled initialisms, long digit sequences and foreign names it had never seen. The diagnosis---acoustic vocabulary coverage, not text normalization---motivated the move to a flow-matching model trained on a much larger Common Voice foundation, where scripted sentences contain numbers, names and rare vocabulary.
+
+\paragraph{Foundation v1 and v2.} The first two CrossFlow foundation runs diverged, with the failure attributed to aligner and duration behaviour. Foundation v3 added per-band mel normalization and trained to completion.
+
+\paragraph{Aggressive direct adaptation.} Before the consistency recipe of stage~5, a direct adaptation of the foundation to the voice regressed intelligibility by update 300--400. Every fine-tune ran with a validation-degradation guard (abort when validation loss exceeds the best value by a factor for a number of consecutive evaluations, leaving the parent checkpoint untouched); one adaptation run tripped it at update 450, and the later evaluation confirmed the abort was right. Only the low-learning-rate, replay-heavy consistency recipe improved identity without moving CER; on the consistency champion it raised pre-selection p10 similarity from 0.860 to 0.891 with CER unchanged.
+
+\paragraph{Reference-audio infilling and context conditioning.} To bind identity structurally rather than through a 256-d additive bias, we trained variants that condition on a paired reference of the voice: in-context infilling with a masked reference segment, and a ``context-full'' variant with global reference conditioning. Identity rose (similarity 0.9524 and 0.9393 in Table~\ref{tab:auto}) but intelligibility collapsed: the infill model at update 4,000 had CER 0.6977, and the context-full model at 6,000 updates (16 steps) had CER 0.0761, recorded at the time as 3.2$\times$ the adapter's CER in the same comparison. A prefix-reference anchoring variant was judged ``intelligibility-fatal'' and not carried further. Across two bolt-on attempts (context conditioning, prefix geometry) neither beat the consistency fine-tune plus selection on identity, and one aborted on the validation-degradation guard. The conclusion drawn at the time was that reference-audio infilling would have to be trained from the first step rather than retrofitted onto a trained single-speaker checkpoint. All were rejected.
+
+\paragraph{Differentiable speaker-consistency loss.} The context-full v1 run also added a differentiable WavLM speaker-consistency term to the training loss. At this data volume it did not converge identity beyond what the adapter achieved.
+
+\paragraph{Found audio.} Section~\ref{sec:found-audio}: 0 LibriVox items, 1.6\,h of multi-speaker VOA field audio at 32.6\,dB SNR. No-go.
+
+\paragraph{Unfinished.} Recording campaign~2 (targeted $+$4--6\,h) was partially recorded; the adapter used 5.008\,h in total. Scripts for a campaign~3 were generated but no recording or training followed. The planned ``\antalia~1.1'' consistency retune on the enlarged corpus, and the CMOS v2 that would have judged it, were never run.
+
+\section{Limitations and intended use}
+\label{sec:limitations}
+
+\begin{enumerate}
+  \item \textbf{Voice identity.} Automated speaker similarity is $\approx$0.93--0.94, but a native listener who knows the voice rated 0/12 anchored pairs as the same person. The synthetic voice has a measured timbre bias in the presence band (Section~\ref{sec:human}). This is the largest known gap, and no CMOS session was run after the adapter stage.
+  \item \textbf{Long inputs.} The total-duration head under-budgets long text. The release recipe's clause chunking ($\le$120 characters) and per-character rate floor are required; unchunked long sentences rush and mumble.
+  \item \textbf{Numbers, normalization-heavy text, foreign names and abbreviations} have the highest CER. Best-of-8 selection partially recovers them; some prompts fail on all 8 seeds.
+  \item \textbf{Seed variance.} Per-prompt CER spreads up to 0.0--0.17 across seeds. The headline numbers depend on best-of-8 selection using Whisper-large-v3 and WavLM as scorers; that is eight times the flow-model work (about $1.5\times$ wall-clock in the batched implementation) plus the scorer passes.
+  \item \textbf{Scope.} One fixed voice; no zero-shot voice cloning; Turkish only; 24\,kHz; grapheme input with the shipped normalizer.
+  \item \textbf{Not done.} No multi-listener MOS or CMOS. No training-data memorization audit was run. Outputs carry no watermark.
+  \item \textbf{Latency.} About 2.1--2.3\,s for a 5\,s utterance on a warm A100 at 32 steps; first request $\sim$6\,s. Best-of-8 multiplies this.
+\end{enumerate}
+
+\paragraph{License and use restrictions.} The weights are released under OpenRAIL-M. Its use restrictions prohibit impersonation, fraud, deception and political robocalls, and require disclosure that speech is AI-generated. The voice belongs to a real person who consented to open-weight release of a model, not to being impersonated; users must not present the output as her, or as any other real person, speaking. The code is Apache-2.0.
+
+\paragraph{Intended use.} Research on Turkish TTS, flow-matching acoustic models and evaluation; fine-tuning from \foundation\ with appropriately licensed data; disclosed synthetic speech in applications where the limitations above are acceptable. Not intended for identity-sensitive applications, safety-critical announcements, or any setting where a listener could reasonably believe a real person is speaking.
+
+\section{Release artifacts}
+\label{sec:release}
+
+Table~\ref{tab:artifacts} lists the released weight files with sizes and checksums.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\caption{Released weight files (\code{model.safetensors}, fp32).}
+\label{tab:artifacts}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\code{cloud0day3/antalia-1} & 1.22\,GB \\
+\quad SHA-256 & \code{853a117ef95fa44efff785a6b674f380} \\
+ & \code{878da57879cb879d6d099d1e1444266e} \\
+\midrule
+\code{cloud0day3/antalia-1-foundation} & 1.20\,GB \\
+\quad SHA-256 & \code{89ecf310a14333c6bd5a754360cee220} \\
+ & \code{7027dd23b2a0171984a32c423afcfcd1} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{\code{cloud0day3/antalia-1}} (\url{https://huggingface.co/cloud0day3/antalia-1}): the fine-tuned voice model. Files: \code{model.safetensors}, \code{config.json}, \code{inference-recipe.json}, \code{prosody-presets.json}, \code{envelope-stats.json}, \code{timbre-profile.json}. Source: the timbre-adapter run (stage~6 in Table~\ref{tab:lineage}), update 1,400, EMA adapter weights applied; 304,552,293 parameters.
+
+\paragraph{\code{cloud0day3/antalia-1-foundation}} (\url{https://huggingface.co/cloud0day3/antalia-1-foundation}): the speaker-agnostic base. Files: \code{model.safetensors}, \code{config.json}. Source: run \path{crossflow-commercial-turkish-foundation-v3-normalized}, update 100,000, EMA; 299,623,013 parameters.
+
+\paragraph{Release format.} Both repositories use the \code{antalia-crossflow-release-v1} format. \code{config.json} carries the model configuration, the mel front-end (24\,kHz, $n_{\mathrm{fft}}$ 1024, hop 256, window 1024, 100 mels, $f_{\min}$ 0, $f_{\max}$ 12\,kHz, per-band mean/std, clip 5.0), the text normalization mode (\code{turkish}), the character vocabulary, the speaker vocabulary, the vocoder pointer (\code{nvidia/bigvgan\_v2\_24khz\_100band\_256x}, pinned commit \code{7d2b454564a6c7d014227f635b7423881f14bdac}, plus \code{scripts/patches/bigvgan-huggingface-hub-1.patch}), and a provenance statement. The vocoder is not redistributed.
+
+\paragraph{Code} (\url{https://github.com/0daycloud/antalia}, Apache-2.0): \code{src/turkish\_tts/crossflow.py} (model), \code{crossflow\_train.py} (training, synthesis, chunking, best-of-$N$), \code{crossflow\_release.py} (release format), \code{normalize.py} (Turkish normalizer), \code{quality*.py} (scorers and gates), the evaluation harness, \code{scripts/synthesize-crossflow.py}, \code{scripts/select-best-of-n.py}, \code{scripts/export-release-checkpoint.py}, \code{scripts/build-release-gallery.py}, configs for training, evaluation and release, tests, the reports cited in this document (CMOS results, failure analysis, found-audio pilot, campaign~2 brief), and the launch plan as a historical record. Excluded: the serving worker, the web product, cloud deployment scripts, the recording-export code, and secrets.
+
+\paragraph{Evaluation data} (planned, \code{cloud0day3/antalia-eval}): the prompt suites \code{turkish-v2.jsonl} (120 prompts, 10 categories $\times$ 12) and \code{turkish-pronunciation-v1.jsonl}, Common Voice and FLEURS filter manifests with QA reports, the CMOS protocol and trial sheet, prosody presets, timbre profile and envelope statistics. No audio. \todo{owner: confirm the dataset repository is published before the arXiv submission}.
+
+\paragraph{Showcase.} A static gallery with raw single-seed vs.\ best-of-8 samples per category, failure cases, the long-form pair, foundation samples and the 16-step sample is at \url{https://0daycloud.github.io/antalia/}.
+
+\section{Lessons and outlook}
+\label{sec:lessons}
+
+\paragraph{Sign redistribution consent before recording.} The consented speaker was the only data path that survived contact with reality (Section~\ref{sec:found-audio}), and open release was only possible because a redistribution addendum was signed. Any project that might one day release weights should put that clause in the first contract, not negotiate it afterwards.
+
+\paragraph{Automated verifiers saturate.} Speaker-verification similarity was an excellent selection signal and a useless certificate. At 0.91--0.94 it no longer distinguished ``her'' from ``someone who sounds a lot like her''; a single informed listener did, twelve times out of twelve. Identity claims need human listeners who know the voice, and the automated metric should be reported as what it is.
+
+\paragraph{Identity needs structural binding.} A 256-d additive speaker bias plus a 3.2M-parameter adapter plus best-of-8 selection got timbre penalty from 2.585 to 1.997, still outside the real range of 0.47--0.98. Our attempts at structural binding through reference audio raised identity and destroyed intelligibility at this data volume. We did not find the middle.
+
+\paragraph{The inference stack is part of the model.} Chunking, the rate floor and seed selection each hid a modelling weakness (duration, duration again, and variance) and each is required to reproduce the reported numbers. Reporting a bare single-seed checkpoint would have been more honest about the model and less honest about the system people would actually run. Identity in particular should never be judged from one seed per prompt: per-seed similarity variance is large, and any identity metric read off a single seed is noise. Evaluate with the selection stack that will actually be served.
+
+\paragraph{Fix the ruler before the model.} The numeric category looked catastrophic (41.5\% CER) until the evaluator normalized digits the way the language speaks them, after which it read about 2.7\%; a training run had nearly been launched to fix a scorer bug (Section~\ref{sec:eval}). Conversely, when the human listener named timbre as the failure dimension, a trivial 11-band spectral metric built the same day reproduced the human verdict with no overlap between real and synthetic clips. Build the measurement for the named failure before training against it.
+
+\paragraph{Zero-initialized, gated conditioning made branching cheap.} Every new conditioning path (context encoder, speaker adapter, prosody features) was added zero-initialized and gated, and bit-exactness with the parent checkpoint was verified (\code{torch.allclose} at $10^{-5}$ on matched sampling) before each branch. Combined with the validation-degradation guard, this let context, infill, prefix-geometry and speaker-consistency branches be tried in quick succession without ambiguity about whether a regression came from plumbing or from training.
+
+\paragraph{Outlook (not a roadmap).} The plan at the time development stopped, recorded here for a possible successor and not as a commitment: complete recording campaign~2 to roughly double the targeted voice corpus, run an ``\antalia~1.1'' consistency retune on it with the proven replay recipe, require the held-out synthesis timbre penalty to fall inside the real range [0.47, 0.98] before scheduling a $\ge$3-listener CMOS v2, and, if anchored same-person remained far below 95\%, escalate to a reference-audio infilling rebuild for structural identity binding. Long-form data with natural pausing (campaign~2, batch~3) was intended to eventually unfreeze the duration model and retire the chunking crutch. None of this was carried out.
+
+\section*{Acknowledgements}
+
+We thank the voice actor, who is credited anonymously by her choice, for her recordings and for agreeing to their use in an openly released model. We thank the contributors to Mozilla Common Voice, whose recordings make up most of the foundation training data, and NVIDIA for releasing BigVGAN~v2 under a permissive license.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

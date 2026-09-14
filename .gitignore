@@ -39,3 +39,13 @@ release/cards/
 
 # The sample gallery is published with the site
 !site/audio/*.wav
+
+# LaTeX build artifacts (main.pdf is committed deliberately)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.blg
+paper/*.bbl
+paper/*.xdv
+paper/*.fls
+paper/*.fdb_latexmk

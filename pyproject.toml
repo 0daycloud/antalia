@@ -69,7 +69,7 @@ Repository = "https://github.com/0daycloud/antalia"
 Weights = "https://huggingface.co/cloud0day3/antalia-1"
 Foundation = "https://huggingface.co/cloud0day3/antalia-1-foundation"
 Evaluation = "https://huggingface.co/datasets/cloud0day3/antalia-eval"
-Paper = "https://arxiv.org/abs/TODO"
+Paper = "https://github.com/0daycloud/antalia/blob/main/paper/main.pdf"
 
 [project.scripts]
 antalia = "turkish_tts.cli:app"
