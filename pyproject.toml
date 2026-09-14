@@ -1,0 +1,102 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "antalia"
+version = "1.0.0"
+description = "Antalia 1: open Turkish text-to-speech (CrossFlow flow-matching model, training, inference, evaluation)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "Sezgin Saygili", email = "sezgin@patientdesk.ai" },
+  { name = "Emre Kaplaner" },
+  { name = "Oncel Ozgul" },
+  { name = "Fikri San Koktas" },
+]
+keywords = ["text-to-speech", "tts", "turkish", "flow-matching", "rectified-flow", "speech-synthesis"]
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Natural Language :: Turkish",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = [
+  "datasets[audio]>=4.0.0,<5",
+  "huggingface-hub>=0.34.0,<1",
+  "httpx>=0.28.0,<1",
+  "jiwer>=3.1.0,<4",
+  "numpy>=2.1.0,<2.3",
+  "openai>=1.100.0,<3",
+  "orjson>=3.10.0,<4",
+  "pydantic>=2.11.0,<3",
+  "pydantic-settings>=2.10.0,<3",
+  "rich>=14.0.0,<15",
+  "safetensors>=0.5,<1",
+  "soundfile>=0.13.0,<1",
+  "tenacity>=9.1.0,<10",
+  "typer>=0.16.0,<1",
+]
+
+[project.optional-dependencies]
+local-asr = [
+  "accelerate>=1.10.0,<2",
+  "faster-whisper>=1.2.0,<2",
+  "torch>=2.8.0,<3",
+  "torchaudio>=2.8.0,<3",
+  "transformers>=4.55,<5",
+]
+training = [
+  "lightning>=2.4.0,<3",
+  "nemo-toolkit[tts]>=2.7.3,<3",
+  "numba==0.61.2",
+  "omegaconf>=2.3.0,<3",
+  "pyworld>=0.3.5,<0.4",
+  "scipy>=1.15,<2",
+  "setuptools>=75,<82",
+]
+dev = [
+  "mypy>=1.17.0,<2",
+  "pytest>=8.4.0,<9",
+  "ruff>=0.12.0,<1",
+]
+
+[project.urls]
+Homepage = "https://0daycloud.github.io/antalia/"
+Repository = "https://github.com/0daycloud/antalia"
+Weights = "https://huggingface.co/cloud0day3/antalia-1"
+Foundation = "https://huggingface.co/cloud0day3/antalia-1-foundation"
+Evaluation = "https://huggingface.co/datasets/cloud0day3/antalia-eval"
+Paper = "https://arxiv.org/abs/TODO"
+
+[project.scripts]
+antalia = "turkish_tts.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/turkish_tts"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["turkish_tts"]
+
+[[tool.mypy.overrides]]
+module = ["hydra", "hydra.*", "joblib", "lightning", "lightning.*", "nemo", "nemo.*", "omegaconf"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["faster_whisper", "faster_whisper.*", "pyworld", "scipy", "scipy.*", "soundfile", "stanza", "torch", "torch.*", "torchaudio", "torchaudio.*", "transformers"]
+ignore_missing_imports = true

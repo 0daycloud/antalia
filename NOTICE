@@ -1,0 +1,30 @@
+Antalia 1 — open Turkish text-to-speech
+Copyright (c) 2026 Sezgin Saygili, Emre Kaplaner, Oncel Ozgul, Fikri San Koktas (Patientdesk.ai)
+
+Third-party attributions
+------------------------
+
+Vocoder: NVIDIA BigVGAN v2 (24 kHz, 100-band, 256x) — MIT License.
+  https://github.com/NVIDIA/BigVGAN
+  The pinned revision used at release time is
+  7d2b454564a6c7d014227f635b7423881f14bdac, loaded via the one-line
+  huggingface_hub compatibility patch in scripts/patches/bigvgan-huggingface-hub-1.patch.
+
+Training data: evaluation and foundation training used
+  - Mozilla Common Voice Scripted Speech 26.0 Turkish (CC0-1.0), under the
+    Mozilla Data Collective Terms; and
+  - Google FLEURS Turkish (CC-BY-4.0).
+  Filter manifests with upstream clip identifiers and checksums are in
+  https://huggingface.co/datasets/cloud0day3/antalia-eval .
+  Audio is not re-hosted here.
+
+The CrossFlow implementation in this repository does not include or depend on
+F5-TTS/FreyaTTS weights, code, audio, or training data. The FastPitch baseline
+referenced in reports/ is a public-domain reference implementation (Lancucki, 2021).
+
+Project
+-------
+
+This product includes code developed under the Apache-2.0 license.
+The associated model weights are licensed separately under the
+Antalia Open RAIL-M license (see https://huggingface.co/cloud0day3/antalia-1).

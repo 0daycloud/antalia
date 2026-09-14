@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Test/type caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Audio and checkpoints - never commit media or weights
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.opus
+*.pt
+*.safetensors
+*.arrow
+*.mp4
+
+# Data manifests with raw audio or secrets - keep only what is explicitly reviewed
+.env
+.env.*
+!.env.example
+
+# Local outputs
+outputs/
+data/
+checkpoints/
+release/hf/
+release/dataset/
+release/gallery/audio/
+release/cards/
+/tmp/
