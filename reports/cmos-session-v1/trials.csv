@@ -1,0 +1,31 @@
+trial,type,category,content
+1,anchored,foreign,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+2,anchored,foreign,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+3,ab,long,"Toplantıya katılacak ekipler önce kendi raporlarını sunacak, ardından ortak sorunlar değerlendirilecek, öncelikli işler için sorumlular belirlenecek ve gün sonunda alınan kararlar yazılı olarak bütün katılımcılarla paylaşılacaktır."
+4,anchored,questions,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+5,ab,long,"Başvurunuzu tamamladıktan sonra belgeleriniz güvenli biçimde incelenecek, eksik bir bilgi görülürse size kısa bir bildirim gönderilecek ve gerekli düzeltmeyi yaptıktan sonra süreç kaldığı yerden devam edecektir."
+6,ab,foreign,WhatsApp üzerinden gönderilen JPEG dosyasını macOS cihazında açamadı.
+7,ab,questions,Yarın sabah dokuzdaki görüşmeyi onaylıyor musunuz?
+8,ab,questions,"Tamam, hem e-posta hem de kısa mesaj almak istediğinizi onaylıyorum."
+9,ab,foreign,NASA'nın yeni projesi yapay zekâ ve GPS verilerini birlikte kullanıyor.
+10,ab,names-places,Yiğit Efe'nin dosyası Ankara'nın Çankaya ilçesindeki Mithatpaşa Caddesi'ne gönderildi.
+11,ab,names-places,Yiğit Efe'nin dosyası Ankara'nın Çankaya ilçesindeki Mithatpaşa Caddesi'ne gönderildi.
+12,ab,names-places,"Tuğçe Hanım, Nevşehir'deki Göreme Açık Hava Müzesi'ni gezmek istiyor."
+13,ab,questions,"Adresin kapı numarası yirmi üç müydü, yoksa otuz iki mi?"
+14,ab,ack,"Tabii, hemen bakıyorum."
+15,ab,foreign,NASA'nın yeni projesi yapay zekâ ve GPS verilerini birlikte kullanıyor.
+16,anchored,names-places,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+17,anchored,names-places,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+18,ab,foreign,WHO ve UNICEF temsilcileri Ankara'daki panelde bir araya geldi.
+19,anchored,numeric,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+20,anchored,normalization,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+21,ab,voice-agent,"Elbette, uygun saatleri kontrol edip hemen size bildireceğim."
+22,anchored,voice-agent,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+23,anchored,general,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+24,ab,questions,"Tamam, hem e-posta hem de kısa mesaj almak istediğinizi onaylıyorum."
+25,anchored,foreign,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+26,ab,questions,"İşlemi şimdi tamamlamamı ister misiniz, yoksa daha sonra mı arayalım?"
+27,ab,foreign,"Profesör, Shakespeare'in eserini New York'taki konferansta tartıştı."
+28,ab,emotion,"Harika bir haber, sizin adınıza gerçekten çok sevindim!"
+29,anchored,normalization,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.
+30,anchored,names-places,İçerikler farklıdır; yalnızca sesin aynı kişiye ait olup olmadığını ve doğallığı değerlendirin.

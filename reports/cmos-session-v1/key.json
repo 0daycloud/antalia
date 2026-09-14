@@ -1,0 +1,224 @@
+[
+  {
+    "trial": 1,
+    "type": "anchored",
+    "prompt": "foreign-009",
+    "real_file": "real-10.wav",
+    "A": "synth",
+    "B": "real"
+  },
+  {
+    "trial": 2,
+    "type": "anchored",
+    "prompt": "foreign-011",
+    "real_file": "real-03.wav",
+    "A": "synth",
+    "B": "real"
+  },
+  {
+    "trial": 3,
+    "type": "ab",
+    "prompt": "long-007",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 4,
+    "type": "anchored",
+    "prompt": "questions-012",
+    "real_file": "real-02.wav",
+    "A": "real",
+    "B": "synth"
+  },
+  {
+    "trial": 5,
+    "type": "ab",
+    "prompt": "long-001",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 6,
+    "type": "ab",
+    "prompt": "foreign-012",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 7,
+    "type": "ab",
+    "prompt": "questions-001",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 8,
+    "type": "catch",
+    "prompt": "questions-012",
+    "A": "identical",
+    "B": "identical"
+  },
+  {
+    "trial": 9,
+    "type": "catch",
+    "prompt": "foreign-002",
+    "A": "identical",
+    "B": "identical"
+  },
+  {
+    "trial": 10,
+    "type": "ab",
+    "prompt": "names-places-007",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 11,
+    "type": "catch",
+    "prompt": "names-places-007",
+    "A": "identical",
+    "B": "identical"
+  },
+  {
+    "trial": 12,
+    "type": "ab",
+    "prompt": "names-places-006",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 13,
+    "type": "ab",
+    "prompt": "questions-011",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 14,
+    "type": "ab",
+    "prompt": "ack-001",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 15,
+    "type": "ab",
+    "prompt": "foreign-002",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 16,
+    "type": "anchored",
+    "prompt": "names-places-002",
+    "real_file": "real-06.wav",
+    "A": "synth",
+    "B": "real"
+  },
+  {
+    "trial": 17,
+    "type": "anchored",
+    "prompt": "names-places-005",
+    "real_file": "real-07.wav",
+    "A": "real",
+    "B": "synth"
+  },
+  {
+    "trial": 18,
+    "type": "ab",
+    "prompt": "foreign-007",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 19,
+    "type": "anchored",
+    "prompt": "numeric-008",
+    "real_file": "real-04.wav",
+    "A": "real",
+    "B": "synth"
+  },
+  {
+    "trial": 20,
+    "type": "anchored",
+    "prompt": "normalization-003",
+    "real_file": "real-11.wav",
+    "A": "synth",
+    "B": "real"
+  },
+  {
+    "trial": 21,
+    "type": "ab",
+    "prompt": "voice-agent-002",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 22,
+    "type": "anchored",
+    "prompt": "voice-agent-004",
+    "real_file": "real-09.wav",
+    "A": "synth",
+    "B": "real"
+  },
+  {
+    "trial": 23,
+    "type": "anchored",
+    "prompt": "general-008",
+    "real_file": "real-01.wav",
+    "A": "real",
+    "B": "synth"
+  },
+  {
+    "trial": 24,
+    "type": "ab",
+    "prompt": "questions-012",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 25,
+    "type": "anchored",
+    "prompt": "foreign-008",
+    "real_file": "real-08.wav",
+    "A": "synth",
+    "B": "real"
+  },
+  {
+    "trial": 26,
+    "type": "ab",
+    "prompt": "questions-003",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 27,
+    "type": "ab",
+    "prompt": "foreign-004",
+    "A": "gated",
+    "B": "plain"
+  },
+  {
+    "trial": 28,
+    "type": "ab",
+    "prompt": "emotion-001",
+    "A": "plain",
+    "B": "gated"
+  },
+  {
+    "trial": 29,
+    "type": "anchored",
+    "prompt": "normalization-009",
+    "real_file": "real-12.wav",
+    "A": "real",
+    "B": "synth"
+  },
+  {
+    "trial": 30,
+    "type": "anchored",
+    "prompt": "names-places-009",
+    "real_file": "real-05.wav",
+    "A": "real",
+    "B": "synth"
+  }
+]
