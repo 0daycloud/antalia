@@ -7,6 +7,7 @@ technical report. It is archived here so the parts that worked are not lost.
 
 - Weights: https://huggingface.co/cloud0day3/antalia-1
 - Foundation: https://huggingface.co/cloud0day3/antalia-1-foundation
+- Voice corpus (5.008 h, CC-BY-4.0): https://huggingface.co/datasets/cloud0day3/antalia-voice-corpus
 - Evaluation data: https://huggingface.co/datasets/cloud0day3/antalia-eval
 - Audio samples: https://0daycloud.github.io/antalia/
 - Paper: https://github.com/0daycloud/antalia/blob/main/paper/main.pdf
@@ -22,7 +23,9 @@ foundation path.
 
 The voice is labelled "Voice B" in prose and `voicedata-candidate-b` in speaker identifiers,
 run names, and config filenames. Both are internal labels; the person behind the voice is
-credited anonymously at her request, and her raw recordings are not released.
+credited anonymously at her request. Her recordings **are** released: the 5.008 h the model
+was fine-tuned on are published as [antalia-voice-corpus](https://huggingface.co/datasets/cloud0day3/antalia-voice-corpus) under CC-BY-4.0, under an
+addendum that covers redistribution of the audio itself.
 
 On our 120-prompt Turkish evaluation suite (Whisper-large-v3, WavLM-x-vector similarity):
 
