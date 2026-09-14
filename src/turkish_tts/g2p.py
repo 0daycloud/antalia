@@ -17,7 +17,11 @@ boundaries and punctuation preserved so tokenizers can keep their markers.
 
 from __future__ import annotations
 
+import re
+
 from turkish_tts.normalize import turkish_lower
+
+_LETTER_RUN = re.compile(r"[^\W\d_]+")
 
 _SIMPLE_MAP = {
     "a": "a",
@@ -86,13 +90,22 @@ def _g2p_word(word: str) -> str:
 
 
 def turkish_g2p(text: str) -> str:
-    """Convert normalized Turkish text to IPA, preserving spacing and punctuation."""
+    """Convert normalized Turkish text to IPA, preserving spacing and punctuation.
+
+    Letters are converted wherever they appear, including in tokens that carry attached
+    punctuation. Testing a whole token with ``str.isalpha`` would skip every word ending in a
+    comma or full stop -- about one word in six -- emitting raw graphemes beside IPA and
+    splitting each affected phoneme across two symbols (``ç`` and ``tʃ``, ``ı`` and ``ɯ``).
+    Apostrophes separate a proper noun from its suffix and carry no sound, so they are dropped.
+    """
     words = turkish_lower(text).split(" ")
     converted: list[str] = []
     for word in words:
         if not word:
             continue
-        converted.append("".join(_g2p_word(part) if part.isalpha() else part for part in word.split("'")))
+        converted.append(
+            "".join(_LETTER_RUN.sub(lambda match: _g2p_word(match.group(0)), part) for part in word.split("'"))
+        )
     return " ".join(converted)
 
 

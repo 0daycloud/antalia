@@ -48,3 +48,20 @@ def test_symbol_inventory_covers_output() -> None:
     sample = turkish_g2p("ğarköy kedi göl kalp taksi hâlâ müze şıracı")
     for char in sample.replace(" ", ""):
         assert char in symbols
+
+
+def test_punctuation_does_not_bypass_conversion() -> None:
+    """A word keeps being converted when punctuation is attached to it.
+
+    Testing a whole token with ``str.isalpha`` skipped every word ending in a comma or full
+    stop, so raw graphemes were emitted beside IPA and each affected phoneme was split across
+    two symbols. Roughly one word in six carries punctuation, so the mixed alphabet was the
+    common case rather than an edge case.
+    """
+    assert turkish_g2p("Zeynep") == turkish_g2p("Zeynep,").rstrip(",")
+    assert turkish_g2p("geçti.") == "ɟetʃti."
+    assert turkish_g2p("ulaştı!") == "uɫaʃtɯ!"
+    assert turkish_g2p("hanım?") == "hanɯm?"
+
+    spoken = turkish_g2p("Özge, Iğdır'a geçti. Ulaştı mı?")
+    assert not set(spoken) & set("çğışöü"), f"raw Turkish graphemes leaked into IPA: {spoken}"
