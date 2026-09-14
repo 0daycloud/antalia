@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f6f3ee">
+  <title>Antalia 1 — an open Turkish text-to-speech model</title>
+  <meta name="description" content="Antalia 1 is an open, single-voice Turkish text-to-speech model (~300M parameters, rectified flow, 24 kHz). Development is discontinued; weights, code and evaluation are released in full.">
+  <link rel="alternate" hreflang="en" href="./">
+  <link rel="alternate" hreflang="tr" href="tr/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='4' y='15' width='4' height='10' rx='2' fill='%23a85a3a'/%3E%3Crect x='12' y='9' width='4' height='22' rx='2' fill='%23a85a3a'/%3E%3Crect x='20' y='4' width='4' height='32' rx='2' fill='%23a85a3a'/%3E%3Crect x='28' y='11' width='4' height='18' rx='2' fill='%23a85a3a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./" aria-label="Antalia 1, home">
+        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <rect x="4" y="15" width="4" height="10" rx="2" fill="currentColor"/>
+          <rect x="12" y="9" width="4" height="22" rx="2" fill="currentColor"/>
+          <rect x="20" y="4" width="4" height="32" rx="2" fill="currentColor"/>
+          <rect x="28" y="11" width="4" height="18" rx="2" fill="currentColor"/>
+        </svg>
+        <span>Antalia 1</span>
+        <span class="brand-status">Discontinued</span>
+      </a>
+      <nav class="site-nav" aria-label="Project links">
+        <a href="https://huggingface.co/cloud0day3/antalia-1">Weights</a>
+        <a href="https://github.com/0daycloud/antalia">Code</a>
+        <a href="https://arxiv.org/abs/TODO">Paper</a>
+        <div class="lang-switch" aria-label="Language">
+          <span aria-current="page" lang="en">EN</span>
+          <a href="tr/" lang="tr" hreflang="tr" aria-label="Türkçe">TR</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-gallery="gallery.json" data-audio-base="audio/" data-lang="en">
+
+    <section class="hero shell" aria-labelledby="hero-title">
+      <p class="eyebrow">Open release</p>
+      <h1 id="hero-title">Antalia 1 — an open Turkish <em>text-to-speech</em> model.</h1>
+      <p class="lede">Development discontinued; released in full. One professional voice, about 300 million parameters, rectified-flow acoustic model at 24 kHz. This page lets you listen to what it does well and where it falls short, with the numbers behind each sample.</p>
+      <div class="button-row">
+        <a class="button button--dark" href="https://huggingface.co/cloud0day3/antalia-1">Get the weights on Hugging Face</a>
+        <a class="button button--ghost" href="https://github.com/0daycloud/antalia">Read the code on GitHub</a>
+        <a class="button button--ghost" href="https://arxiv.org/abs/TODO">Read the technical report</a>
+      </div>
+      <ul class="hero-facts" aria-label="Key facts">
+        <li><strong>304.6M</strong> parameters</li>
+        <li><strong>24 kHz</strong> output</li>
+        <li><strong>67.55 h</strong> Common Voice + FLEURS foundation data</li>
+        <li><strong>5.0 h</strong> of the released voice</li>
+        <li><strong>Turkish</strong> only, grapheme input</li>
+      </ul>
+    </section>
+
+    <section class="section" id="listen" aria-labelledby="listen-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Listen</p>
+          <h2 id="listen-title">Two samples per category, raw and selected</h2>
+          <p>Twenty prompts from the 120-prompt <code>turkish-v2</code> evaluation suite, two per category. Each card plays the same sentence twice: the first random seed as generated, and the best of eight seeds chosen by an automatic score (WavLM speaker similarity minus Whisper character error rate, minus small F0-envelope and timbre penalties). CER is Whisper-large-v3 character error rate against the prompt; Sim is WavLM x-vector cosine similarity to the voice actor’s recordings. Selection costs 8× compute.</p>
+        </div>
+        <div class="card-grid" id="showcase-grid" data-gallery-container></div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="failures" aria-labelledby="failures-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Where it fails</p>
+          <h2 id="failures-title">Numbers, normalization and foreign terms</h2>
+          <p>These are the prompts with the highest error rates in the suite: six were the worst single-seed results, three the worst results after selection. Some fail on one seed and are recovered by best-of-8 selection; others are not recovered by any seed within the selection score. The note under each sentence shows the CER range across all eight candidates.</p>
+        </div>
+        <div class="card-grid" id="failures-grid" data-gallery-container></div>
+      </div>
+    </section>
+
+    <section class="section" id="long-inputs" aria-labelledby="long-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Long inputs</p>
+          <h2 id="long-title">One duration for the whole input</h2>
+          <p>The model predicts a single total frame count for each input from the pooled text encoding; there are no per-token durations and no aligner. On long text that prediction under-budgets: the same 370-character passage renders as 9.1 s of rushed, mumbled speech when fed in one pass, and as 34.8 s when the inference stack splits it at clause boundaries (≤120 characters, 160 ms pauses, a floor of 0.085 s per non-space character). Chunking cut long-form WER from 36.6 % to 10.7 % on a single seed.</p>
+        </div>
+        <div class="card-grid" id="long-grid" data-gallery-container></div>
+
+        <div class="subsection" id="foundation">
+          <h3>Foundation model, unconditioned</h3>
+          <p>Antalia 1 Foundation is the speaker-agnostic base (299.6M parameters, 100,000 updates on 67.55 h of Common Voice 26 and FLEURS Turkish). With speaker id 0 it produces an averaged voice that belongs to nobody. Single-seed CER on the suite is 0.18; these two samples are what the fine-tuning stages start from.</p>
+          <div class="card-grid" id="foundation-grid" data-gallery-container></div>
+        </div>
+
+        <div class="subsection" id="steps">
+          <h3>16 steps instead of 32</h3>
+          <p>Halving the Euler steps reduced generation time by 45.1 %. Mean speaker similarity stayed within 0.0006 of the 32-step recipe; the 10th-percentile similarity was lower. The release recipe uses 32 steps.</p>
+          <div class="card-grid" id="steps-grid" data-gallery-container></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="works" aria-labelledby="works-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Assessment</p>
+          <h2 id="works-title">What works, what does not</h2>
+        </div>
+        <div class="columns columns--works">
+          <div>
+            <h3 class="h3-good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>What works</h3>
+            <ul class="fact-list fact-list--good">
+              <li><strong>Short conversational Turkish is intelligible.</strong> Single-seed CER 0.053 across the suite (p90 0.135); best-of-8 CER 0.030 (p90 0.101).</li>
+              <li><strong>Grapheme input with a deterministic normalizer.</strong> Numbers, dates, currency and abbreviations are spelled out in code before synthesis; no phoneme dictionary is needed.</li>
+              <li><strong>Clause chunking makes long inputs usable.</strong> Long-form WER 36.6 % → 10.7 % with ≤120-character chunks.</li>
+              <li><strong>A frozen, transparent vocoder.</strong> BigVGAN v2 24 kHz measures within ±0.4 dB on real-mel reconstruction, so errors you hear come from the acoustic model.</li>
+              <li><strong>The release is complete.</strong> Both checkpoints, the training, selection and evaluation code, the 120-prompt suite, the listening protocol and its raw results are public. The voice actor’s recordings are not.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="h3-bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>What does not</h3>
+            <ul class="fact-list fact-list--bad">
+              <li><strong>Voice similarity.</strong> Automated similarity reads 0.93–0.94, but a native listener who knows the voice rated 0 of 12 synthesized-vs-real pairs as the same person. The gap is a timbre bias in the presence band (+4.0 dB at 4.7–6.8 kHz). This is the biggest limitation.</li>
+              <li><strong>Long inputs.</strong> The total-duration head under-budgets; without clause chunking (≤120 characters) and a per-character frame floor, long sentences rush and mumble.</li>
+              <li><strong>Numbers, normalization-heavy text, foreign names and abbreviations</strong> have the highest CER. Best-of-8 partially recovers them; some prompts fail on all eight seeds.</li>
+              <li><strong>Single-seed variance is large.</strong> Per-prompt CER spreads up to 0.00–0.17 across seeds. The headline numbers depend on best-of-8 selection with Whisper and WavLM scorers, which costs 8× compute.</li>
+              <li><strong>One fixed voice.</strong> No zero-shot cloning, Turkish only, 24 kHz, grapheme input.</li>
+              <li><strong>No multi-listener MOS, no memorization audit, no watermark.</strong></li>
+              <li><strong>Latency.</strong> On an A100 with 32 steps and a resident model, a 5 s utterance takes about 2.1–2.3 s after warm-up; the first request about 6 s. On the cancelled Cloud Run L4 staging, time-to-first-audio was p50 5.0 s / p95 9.2 s at low load.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="listening" aria-labelledby="listening-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Human listening</p>
+          <h2 id="listening-title">One listener, twenty-seven trials, one verdict</h2>
+        </div>
+        <div class="callout">
+          <div>
+            <p>A comparative MOS session was run on 2026-08-09 with a single native listener, the project owner, who knows the voice actor’s voice. 27 non-catch trials; the 3 catch trials were rated correctly. Pooled CMOS was −0.667 ± 0.653 toward the candidate. The gated serving recipe scored +0.267 ± 0.728 against the plain recipe (n = 15). Against the real recordings, synthesized speech scored −1.833 ± 0.757 (n = 12) and the listener judged <strong>0 of 12</strong> pairs to be the same person.</p>
+            <p>Per category: emotion +2.0, general +2.0, questions +0.2, acknowledgement 0.0, long −0.5, names and places −1.0, voice agent −1.0, foreign −1.14, numeric −2.0, normalization −2.5.</p>
+            <p>The session rated the v5 predecessor checkpoint. The timbre penalty in selection and the adapter stage that became Antalia 1 were the response to it; they lowered the measured penalty from 2.585 to 1.997, still outside the real-voice range of 0.47–0.98. A ≥3-listener protocol was designed and never run. No multi-listener MOS exists for this model, and automated speaker similarity should not be read as evidence of identity.</p>
+          </div>
+          <dl class="stat-grid">
+            <div class="stat"><dt>Same person</dt><dd>0 / 12<small>anchored synth vs real</small></dd></div>
+            <div class="stat"><dt>CMOS vs real</dt><dd>−1.83<small>± 0.76, n = 12</small></dd></div>
+            <div class="stat"><dt>Pooled CMOS</dt><dd>−0.67<small>± 0.65, n = 27</small></dd></div>
+            <div class="stat"><dt>Listeners</dt><dd>1<small>native, informed</small></dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="architecture" aria-labelledby="arch-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Architecture</p>
+          <h2 id="arch-title">Characters in, mel frames out</h2>
+          <p>An independent implementation of a CrossFlow-style rectified-flow model. Graphemes are encoded once; the acoustic decoder denoises 100-band log-mel frames conditioned on them through cross-attention. It does not use or depend on F5-TTS or FreyaTTS weights, code, audio or data.</p>
+        </div>
+
+        <figure class="diagram" aria-labelledby="diagram-caption">
+          <svg viewBox="0 0 960 330" role="img" aria-labelledby="diagram-title diagram-desc">
+            <title id="diagram-title">Antalia 1 signal flow</title>
+            <desc id="diagram-desc">Text goes through a Turkish normalizer into a character encoder with four ConvNeXt blocks. The encoder feeds a duration head that predicts the total frame count, and provides cross-attention keys to 16 flow blocks. Noise frames plus the text conditioning pass through the flow blocks, each with self-attention, cross-attention, a SwiGLU feed-forward, adaLN modulation from the timestep and speaker context, and a residual adapter. The output is a 100-band mel spectrogram, converted by BigVGAN v2 to a 24 kHz waveform.</desc>
+            <defs>
+              <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 10 5 0 10z" fill="currentColor" style="fill: oklch(0.4 0.02 52)"/>
+              </marker>
+            </defs>
+
+            <!-- Row 1: text path -->
+            <rect class="box" x="16" y="30" width="96" height="56" rx="10"/>
+            <text x="64" y="54" text-anchor="middle">Text</text>
+            <text x="64" y="71" text-anchor="middle" class="small">Turkish, any case</text>
+
+            <path class="arrow" d="M112 58h30"/>
+
+            <rect class="box" x="144" y="30" width="136" height="56" rx="10"/>
+            <text x="212" y="54" text-anchor="middle">Normalizer</text>
+            <text x="212" y="71" text-anchor="middle" class="small">numbers, dates, abbr.</text>
+
+            <path class="arrow" d="M280 58h30"/>
+
+            <rect class="box box--accent" x="312" y="22" width="196" height="72" rx="10"/>
+            <text x="410" y="48" text-anchor="middle">Character encoder</text>
+            <text x="410" y="65" text-anchor="middle" class="small">embedding + sinusoidal pos.</text>
+            <text x="410" y="80" text-anchor="middle" class="small">4 ConvNeXt blocks · dim 768</text>
+
+            <path class="arrow" d="M508 58h30"/>
+
+            <rect class="box" x="540" y="30" width="150" height="56" rx="10"/>
+            <text x="615" y="54" text-anchor="middle">Duration head</text>
+            <text x="615" y="71" text-anchor="middle" class="small">pooled → log total frames</text>
+
+            <!-- duration → noise frames -->
+            <path class="arrow arrow--dashed" d="M615 86v40H80v58"/>
+            <text x="350" y="120" text-anchor="middle" class="small">frame count</text>
+
+            <!-- cross-attention from encoder to flow blocks -->
+            <path class="arrow" d="M410 94v112"/>
+            <text x="425" y="150" class="small">cross-attention keys</text>
+
+            <!-- Row 2: acoustic path -->
+            <rect class="box" x="16" y="184" width="128" height="64" rx="10"/>
+            <text x="80" y="210" text-anchor="middle">Noise</text>
+            <text x="80" y="227" text-anchor="middle" class="small">T × 100 mel frames</text>
+
+            <path class="arrow" d="M144 216h44"/>
+
+            <rect class="box box--ink" x="190" y="170" width="300" height="92" rx="12"/>
+            <text x="340" y="196" text-anchor="middle" class="on-ink">16 flow blocks · dim 768 · 12 heads</text>
+            <text x="340" y="216" text-anchor="middle" class="on-ink small">self-attention → cross-attention → SwiGLU (3072)</text>
+            <text x="340" y="232" text-anchor="middle" class="on-ink small">adaLN 9-way modulation from timestep context</text>
+            <text x="340" y="248" text-anchor="middle" class="on-ink small">zero-init bottleneck adapter (128) + style vector</text>
+
+            <path class="arrow" d="M490 216h44"/>
+
+            <rect class="box box--accent" x="536" y="184" width="118" height="64" rx="10"/>
+            <text x="595" y="210" text-anchor="middle">Mel</text>
+            <text x="595" y="227" text-anchor="middle" class="small">100 bands · hop 256</text>
+
+            <path class="arrow" d="M654 216h44"/>
+
+            <rect class="box box--sage" x="700" y="184" width="118" height="64" rx="10"/>
+            <text x="759" y="210" text-anchor="middle">BigVGAN v2</text>
+            <text x="759" y="227" text-anchor="middle" class="small">frozen, MIT</text>
+
+            <path class="arrow" d="M818 216h44"/>
+
+            <rect class="box" x="864" y="184" width="80" height="64" rx="10"/>
+            <text x="904" y="210" text-anchor="middle">Audio</text>
+            <text x="904" y="227" text-anchor="middle" class="small">24 kHz</text>
+
+            <!-- conditioning into adaLN -->
+            <rect class="box" x="190" y="288" width="300" height="34" rx="8"/>
+            <text x="340" y="310" text-anchor="middle" class="small">timestep t · speaker embedding (256) · 6-d prosody vector · CFG text 4.0 / speaker 1.0</text>
+            <path class="arrow arrow--dashed" d="M340 288v-24"/>
+
+            <!-- solver note -->
+            <text x="595" y="292" text-anchor="middle" class="small">Euler, 32 steps</text>
+            <text x="595" y="306" text-anchor="middle" class="small">sway −0.8 · mel clamp 5.0</text>
+            <path class="arrow arrow--dashed" d="M595 280v-30"/>
+          </svg>
+          <figcaption id="diagram-caption" class="diagram-caption">Signal flow at inference. Speaker and prosody conditioning exist only in the fine-tuned checkpoint; the foundation checkpoint has speaker id 0 only. Best-of-8 selection wraps the whole path and is optional.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <caption>Automated metrics on turkish-v2 (120 prompts, Whisper-large-v3 CER/WER, WavLM x-vector similarity)</caption>
+            <thead>
+              <tr>
+                <th scope="col">System</th>
+                <th scope="col" class="num">CER mean</th>
+                <th scope="col" class="num">CER p90</th>
+                <th scope="col" class="num">WER mean</th>
+                <th scope="col" class="num">Sim mean</th>
+                <th scope="col" class="num">Sim p10</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Foundation v3 @100k, unconditioned, single seed</th>
+                <td class="num">0.1835</td><td class="num">0.4049</td><td class="num">0.3952</td><td class="num">0.8162*</td><td class="num">0.625*</td>
+              </tr>
+              <tr>
+                <th scope="row">v5 consistency @6000, single seed</th>
+                <td class="num">0.0840</td><td class="num">0.2325</td><td class="num">0.1870</td><td class="num">0.9315</td><td class="num">0.8913</td>
+              </tr>
+              <tr>
+                <th scope="row">v5 best-of-8 (timbre-gated, w = 0.05)</th>
+                <td class="num">0.0375</td><td class="num">0.1127</td><td class="num">0.1059</td><td class="num">0.9423</td><td class="num">0.9113</td>
+              </tr>
+              <tr class="is-release">
+                <th scope="row">Antalia 1 (adapter v2 @1400), single seed</th>
+                <td class="num">0.0528</td><td class="num">0.1348</td><td class="num">0.1297</td><td class="num">0.9331</td><td class="num">0.9054</td>
+              </tr>
+              <tr class="is-release">
+                <th scope="row">Antalia 1 best-of-8 (timbre-gated)</th>
+                <td class="num">0.0298</td><td class="num">0.1007</td><td class="num">0.0934</td><td class="num">0.9445</td><td class="num">0.9170</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="table-note">* Foundation similarity is measured against the released voice, which the foundation never saw; it is reported only as the verifier’s floor. Similarity numbers above 0.93 did not correspond to human identity judgements (see Human listening).</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="run" aria-labelledby="run-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Run it locally</p>
+          <h2 id="run-title">Synthesize a sentence</h2>
+          <p>Nothing is hosted. The loader pulls the checkpoint from Hugging Face and the vocoder from <code>nvidia/bigvgan_v2_24khz_100band_256x</code>. A GPU is recommended; the numbers on this page were measured on an A100.</p>
+        </div>
+        <ol class="run-steps">
+          <li>
+            <p>Clone the repository and install the package.</p>
+<pre><code>git clone https://github.com/0daycloud/antalia
+cd antalia
+uv sync            <span class="cm"># or: pip install -e .</span></code></pre>
+          </li>
+          <li>
+            <p>Set up the BigVGAN source tree. The vocoder is not redistributed: the repository pins commit <code>7d2b4545</code> and ships a one-line <code>huggingface_hub</code> compatibility patch. Follow the “Vocoder” section of the README.</p>
+<pre><code><span class="cm"># BigVGAN source tree (pinned commit + one-line hub patch), see README "Vocoder"</span></code></pre>
+          </li>
+          <li>
+            <p>Synthesize.</p>
+<pre><code>python scripts/synthesize-crossflow.py \
+  --checkpoint cloud0day3/antalia-1 \
+  --vocoder nvidia/bigvgan_v2_24khz_100band_256x \
+  --speaker voicedata-candidate-b \
+  --text "Merhaba" \
+  --output merhaba.wav</code></pre>
+          </li>
+        </ol>
+        <p class="table-note"><code>--checkpoint</code> accepts a Hub repo id, a local release directory or a training <code>.pt</code> file. For best-of-8 selection, generate seed candidates with <code>--seed-candidates 8</code> and run <code>scripts/select-best-of-n.py</code> with <code>timbre-profile.json</code> and <code>envelope-stats.json</code> from the weights repository.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div>
+          <h2>License</h2>
+          <p>Code: <a href="https://github.com/0daycloud/antalia">Apache-2.0</a>. Weights: OpenRAIL-M with use restrictions — no impersonation, fraud, deception or political robocalls; disclosure of AI generation is required.</p>
+          <p>“Antalia” is an unregistered name. An unrelated Italian business, ANTALIA AI, exists; this project is not affiliated with it.</p>
+        </div>
+        <div>
+          <h2>Authors</h2>
+          <p>Sezgin Saygili, Emre Kaplaner, Oncel Ozgul, Fikri San Koktas — <a href="https://patientdesk.ai">Patientdesk.ai</a>.</p>
+          <p>Contact: <a href="mailto:sezgin@patientdesk.ai">sezgin@patientdesk.ai</a> or <a href="https://github.com/0daycloud/antalia/issues">GitHub issues</a>. Development has stopped; community pull requests are accepted, there is no roadmap.</p>
+        </div>
+        <div>
+          <h2>Credits</h2>
+          <p>The voice belongs to a professional Turkish voice actor who signed a redistribution addendum covering open weights and chose to be credited anonymously. Her raw recordings are not released.</p>
+          <p>Foundation data: <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> 26.0 Turkish and FLEURS. Vocoder: <a href="https://huggingface.co/nvidia/bigvgan_v2_24khz_100band_256x">NVIDIA BigVGAN v2</a> (MIT), used unmodified.</p>
+        </div>
+        <div>
+          <h2>Artifacts</h2>
+          <p><a href="https://huggingface.co/cloud0day3/antalia-1">cloud0day3/antalia-1</a> — fine-tuned voice model, 1.22 GB fp32.</p>
+          <p><a href="https://huggingface.co/cloud0day3/antalia-1-foundation">cloud0day3/antalia-1-foundation</a> — speaker-agnostic base, 1.20 GB fp32.</p>
+          <p><a href="https://github.com/0daycloud/antalia">github.com/0daycloud/antalia</a> — model, training, selection and evaluation code. <a href="https://arxiv.org/abs/TODO">Technical report</a> on arXiv.</p>
+        </div>
+      </div>
+      <div class="disclosure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
+        <p>All audio on this page is AI-generated. None of it is a recording of a real person.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

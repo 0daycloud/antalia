@@ -36,3 +36,6 @@ release/dataset/
 release/gallery/audio/
 release/cards/
 /tmp/
+
+# The sample gallery is published with the site
+!site/audio/*.wav

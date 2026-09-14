@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f6f3ee">
+  <title>Antalia 1 — açık bir Türkçe metinden konuşma modeli</title>
+  <meta name="description" content="Antalia 1, tek sesli, açık bir Türkçe metinden konuşma modelidir (~300M parametre, rectified flow, 24 kHz). Geliştirme durduruldu; ağırlıklar, kod ve değerlendirme eksiksiz yayımlandı.">
+  <link rel="alternate" hreflang="en" href="../">
+  <link rel="alternate" hreflang="tr" href="./">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='4' y='15' width='4' height='10' rx='2' fill='%23a85a3a'/%3E%3Crect x='12' y='9' width='4' height='22' rx='2' fill='%23a85a3a'/%3E%3Crect x='20' y='4' width='4' height='32' rx='2' fill='%23a85a3a'/%3E%3Crect x='28' y='11' width='4' height='18' rx='2' fill='%23a85a3a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">İçeriğe geç</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./" aria-label="Antalia 1, ana sayfa">
+        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <rect x="4" y="15" width="4" height="10" rx="2" fill="currentColor"/>
+          <rect x="12" y="9" width="4" height="22" rx="2" fill="currentColor"/>
+          <rect x="20" y="4" width="4" height="32" rx="2" fill="currentColor"/>
+          <rect x="28" y="11" width="4" height="18" rx="2" fill="currentColor"/>
+        </svg>
+        <span>Antalia 1</span>
+        <span class="brand-status">Durduruldu</span>
+      </a>
+      <nav class="site-nav" aria-label="Proje bağlantıları">
+        <a href="https://huggingface.co/cloud0day3/antalia-1">Ağırlıklar</a>
+        <a href="https://github.com/0daycloud/antalia">Kod</a>
+        <a href="https://arxiv.org/abs/TODO">Makale</a>
+        <div class="lang-switch" aria-label="Dil">
+          <a href="../" lang="en" hreflang="en" aria-label="English">EN</a>
+          <span aria-current="page" lang="tr">TR</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-gallery="../gallery.json" data-audio-base="../audio/" data-lang="tr">
+
+    <section class="hero shell" aria-labelledby="hero-title">
+      <p class="eyebrow">Açık yayın</p>
+      <h1 id="hero-title">Antalia 1 — açık bir Türkçe <em>metinden konuşma</em> modeli.</h1>
+      <p class="lede">Geliştirme durduruldu; eksiksiz yayımlandı. Tek bir profesyonel ses, yaklaşık 300 milyon parametre, 24 kHz’de rectified-flow akustik model. Bu sayfada modelin neyi iyi yaptığını ve nerede yetersiz kaldığını, her örneğin arkasındaki sayılarla birlikte dinleyebilirsiniz.</p>
+      <div class="button-row">
+        <a class="button button--dark" href="https://huggingface.co/cloud0day3/antalia-1">Ağırlıkları Hugging Face’ten alın</a>
+        <a class="button button--ghost" href="https://github.com/0daycloud/antalia">Kodu GitHub’da okuyun</a>
+        <a class="button button--ghost" href="https://arxiv.org/abs/TODO">Teknik raporu okuyun</a>
+      </div>
+      <ul class="hero-facts" aria-label="Temel bilgiler">
+        <li><strong>304,6M</strong> parametre</li>
+        <li><strong>24 kHz</strong> çıkış</li>
+        <li><strong>67,55 sa</strong> Common Voice + FLEURS temel veri</li>
+        <li><strong>5,0 sa</strong> yayımlanan sesten kayıt</li>
+        <li><strong>Yalnızca Türkçe</strong>, harf tabanlı girdi</li>
+      </ul>
+    </section>
+
+    <section class="section" id="listen" aria-labelledby="listen-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Dinleyin</p>
+          <h2 id="listen-title">Her kategoriden iki örnek, ham ve seçilmiş</h2>
+          <p>120 istemli <code>turkish-v2</code> değerlendirme setinden, kategori başına iki tane olmak üzere yirmi istem. Her kart aynı cümleyi iki kez çalar: ilk rastgele tohumla üretilen hâli ve otomatik bir puanla (WavLM konuşmacı benzerliği eksi Whisper karakter hata oranı, eksi küçük F0 zarfı ve tını cezaları) sekiz tohum arasından seçilen en iyisi. CER, istem metnine göre Whisper-large-v3 karakter hata oranıdır; Benzerlik, seslendirme sanatçısının kayıtlarına WavLM x-vektör kosinüs benzerliğidir. Seçim 8 kat hesaplama maliyeti getirir.</p>
+        </div>
+        <div class="card-grid" id="showcase-grid" data-gallery-container></div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="failures" aria-labelledby="failures-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Nerede başarısız oluyor</p>
+          <h2 id="failures-title">Sayılar, normalleştirme ve yabancı terimler</h2>
+          <p>Bunlar sette en yüksek hata oranına sahip istemler: altısı tek tohumda en kötü sonuçlar, üçü seçimden sonra en kötü sonuçlar. Bazıları tek tohumda başarısız olup 8’de en iyi seçimiyle düzeliyor; bazılarını seçim puanı içindeki hiçbir tohum düzeltemiyor. Her cümlenin altındaki not, sekiz adayın tümündeki CER aralığını gösterir.</p>
+        </div>
+        <div class="card-grid" id="failures-grid" data-gallery-container></div>
+      </div>
+    </section>
+
+    <section class="section" id="long-inputs" aria-labelledby="long-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Uzun girdiler</p>
+          <h2 id="long-title">Tüm girdi için tek bir süre</h2>
+          <p>Model, her girdi için havuzlanmış metin kodlamasından tek bir toplam çerçeve sayısı tahmin eder; belirteç başına süre ve hizalayıcı yoktur. Uzun metinlerde bu tahmin yetersiz kalır: aynı 370 karakterlik pasaj tek geçişte verildiğinde 9,1 saniyelik aceleci ve geveleyen bir konuşma, çıkarım katmanı onu cümle sınırlarından böldüğünde (≤120 karakter, 160 ms duraklama, boşluk dışı karakter başına 0,085 s taban) 34,8 saniye üretir. Parçalama, tek tohumda uzun metin WER’ini %36,6’dan %10,7’ye düşürdü.</p>
+        </div>
+        <div class="card-grid" id="long-grid" data-gallery-container></div>
+
+        <div class="subsection" id="foundation">
+          <h3>Temel model, koşulsuz</h3>
+          <p>Antalia 1 Foundation, konuşmacıdan bağımsız temeldir (299,6M parametre; 67,55 saat Common Voice 26 ve FLEURS Türkçe verisi üzerinde 100.000 güncelleme). Konuşmacı kimliği 0 ile kimseye ait olmayan ortalama bir ses üretir. Setteki tek tohum CER’i 0,18’dir; bu iki örnek, ince ayar aşamalarının başladığı noktadır.</p>
+          <div class="card-grid" id="foundation-grid" data-gallery-container></div>
+        </div>
+
+        <div class="subsection" id="steps">
+          <h3>32 yerine 16 adım</h3>
+          <p>Euler adımlarını yarıya indirmek üretim süresini %45,1 azalttı. Ortalama konuşmacı benzerliği 32 adımlı tarifin 0,0006 içinde kaldı; 10. yüzdelik benzerlik daha düşüktü. Yayın tarifi 32 adım kullanır.</p>
+          <div class="card-grid" id="steps-grid" data-gallery-container></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="works" aria-labelledby="works-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Değerlendirme</p>
+          <h2 id="works-title">Neler çalışıyor, neler çalışmıyor</h2>
+        </div>
+        <div class="columns columns--works">
+          <div>
+            <h3 class="h3-good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Neler çalışıyor</h3>
+            <ul class="fact-list fact-list--good">
+              <li><strong>Kısa, günlük Türkçe anlaşılır.</strong> Set genelinde tek tohum CER 0,053 (p90 0,135); 8’de en iyi CER 0,030 (p90 0,101).</li>
+              <li><strong>Deterministik normalleştiriciyle harf tabanlı girdi.</strong> Sayılar, tarihler, para birimleri ve kısaltmalar sentezden önce kodla açık yazılır; fonem sözlüğü gerekmez.</li>
+              <li><strong>Cümle parçalama uzun girdileri kullanılabilir kılar.</strong> ≤120 karakterlik parçalarla uzun metin WER’i %36,6 → %10,7.</li>
+              <li><strong>Donmuş, şeffaf bir vocoder.</strong> BigVGAN v2 24 kHz, gerçek mel yeniden kurmada ±0,4 dB içinde ölçülür; dolayısıyla duyduğunuz hatalar akustik modelden gelir.</li>
+              <li><strong>Yayın eksiksizdir.</strong> Her iki kontrol noktası, eğitim, seçim ve değerlendirme kodu, 120 istemlik set, dinleme protokolü ve ham sonuçları herkese açık. Seslendirme sanatçısının kayıtları değil.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="h3-bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>Neler çalışmıyor</h3>
+            <ul class="fact-list fact-list--bad">
+              <li><strong>Ses benzerliği.</strong> Otomatik benzerlik 0,93–0,94 okuyor, ama sesi tanıyan ana dili Türkçe bir dinleyici 12 sentez–gerçek çiftinin 0’ını aynı kişi olarak değerlendirdi. Fark, presence bandındaki bir tını sapmasıdır (4,7–6,8 kHz’de +4,0 dB). En büyük kısıt budur.</li>
+              <li><strong>Uzun girdiler.</strong> Toplam süre başlığı yetersiz bütçeler; cümle parçalama (≤120 karakter) ve karakter başına çerçeve tabanı olmadan uzun cümleler acele eder ve geveler.</li>
+              <li><strong>Sayılar, normalleştirme ağırlıklı metin, yabancı isimler ve kısaltmalar</strong> en yüksek CER’e sahiptir. 8’de en iyi kısmen düzeltir; bazı istemler sekiz tohumun tümünde başarısız olur.</li>
+              <li><strong>Tek tohum varyansı büyüktür.</strong> İstem başına CER tohumlar arasında 0,00–0,17’ye kadar açılır. Başlık sayıları, Whisper ve WavLM puanlayıcılarıyla 8’de en iyi seçimine bağlıdır; bu da 8 kat hesaplama maliyeti demektir.</li>
+              <li><strong>Tek sabit ses.</strong> Sıfır atışlı klonlama yok, yalnızca Türkçe, 24 kHz, harf tabanlı girdi.</li>
+              <li><strong>Çok dinleyicili MOS yok, ezberleme denetimi yok, filigran yok.</strong></li>
+              <li><strong>Gecikme.</strong> A100 üzerinde 32 adım ve bellekte hazır modelle 5 saniyelik bir cümle ısınmadan sonra yaklaşık 2,1–2,3 s sürer; ilk istek yaklaşık 6 s. İptal edilen Cloud Run L4 ön üretim ortamında ilk sese kadar geçen süre düşük yükte p50 5,0 s / p95 9,2 s idi.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="listening" aria-labelledby="listening-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">İnsan dinleme değerlendirmesi</p>
+          <h2 id="listening-title">Bir dinleyici, yirmi yedi deneme, tek bir karar</h2>
+        </div>
+        <div class="callout">
+          <div>
+            <p>9 Ağustos 2026’da, seslendirme sanatçısının sesini tanıyan tek bir ana dili Türkçe dinleyiciyle (proje sahibi) karşılaştırmalı bir MOS oturumu yapıldı. 27 gerçek deneme; 3 kontrol denemesi doğru değerlendirildi. Havuzlanmış CMOS adaya doğru −0,667 ± 0,653 idi. Kapılı sunum tarifi, düz tarife karşı +0,267 ± 0,728 aldı (n = 15). Gerçek kayıtlara karşı sentezlenen konuşma −1,833 ± 0,757 aldı (n = 12) ve dinleyici <strong>12 çiftin 0’ını</strong> aynı kişi olarak değerlendirdi.</p>
+            <p>Kategori bazında: duygu +2,0, genel +2,0, sorular +0,2, onaylama 0,0, uzun −0,5, isimler ve yerler −1,0, sesli asistan −1,0, yabancı −1,14, sayısal −2,0, normalleştirme −2,5.</p>
+            <p>Oturum, v5 öncül kontrol noktasını değerlendirdi. Seçimdeki tını cezası ve Antalia 1’e dönüşen adaptör aşaması buna yanıt olarak geldi; ölçülen cezayı 2,585’ten 1,997’ye düşürdüler, ancak bu değer gerçek ses aralığının (0,47–0,98) hâlâ dışındadır. ≥3 dinleyicili bir protokol tasarlandı ve hiç uygulanmadı. Bu model için çok dinleyicili MOS yoktur; otomatik konuşmacı benzerliği kimlik kanıtı olarak okunmamalıdır.</p>
+          </div>
+          <dl class="stat-grid">
+            <div class="stat"><dt>Aynı kişi</dt><dd>0 / 12<small>sabitlenmiş sentez–gerçek</small></dd></div>
+            <div class="stat"><dt>Gerçeğe karşı CMOS</dt><dd>−1,83<small>± 0,76, n = 12</small></dd></div>
+            <div class="stat"><dt>Havuzlanmış CMOS</dt><dd>−0,67<small>± 0,65, n = 27</small></dd></div>
+            <div class="stat"><dt>Dinleyici</dt><dd>1<small>ana dili Türkçe, bilgili</small></dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="architecture" aria-labelledby="arch-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Mimari</p>
+          <h2 id="arch-title">Harfler girer, mel çerçeveleri çıkar</h2>
+          <p>CrossFlow tarzı bir rectified-flow modelinin bağımsız uygulaması. Harfler bir kez kodlanır; akustik kod çözücü, çapraz dikkat yoluyla onlara koşullanmış 100 bantlı log-mel çerçevelerinin gürültüsünü giderir. F5-TTS veya FreyaTTS ağırlıklarını, kodunu, sesini ya da verisini kullanmaz ve bunlara bağlı değildir.</p>
+        </div>
+
+        <figure class="diagram" aria-labelledby="diagram-caption">
+          <svg viewBox="0 0 960 330" role="img" aria-labelledby="diagram-title diagram-desc">
+            <title id="diagram-title">Antalia 1 sinyal akışı</title>
+            <desc id="diagram-desc">Metin, Türkçe normalleştiriciden geçip dört ConvNeXt bloklu karakter kodlayıcıya girer. Kodlayıcı, toplam çerçeve sayısını tahmin eden süre başlığını besler ve 16 akış bloğuna çapraz dikkat anahtarları sağlar. Gürültü çerçeveleri ile metin koşullaması, her biri öz dikkat, çapraz dikkat, SwiGLU ileri besleme, zaman adımı ve konuşmacı bağlamından adaLN modülasyonu ve artık adaptör içeren akış bloklarından geçer. Çıktı, BigVGAN v2 tarafından 24 kHz dalga biçimine dönüştürülen 100 bantlı bir mel spektrogramdır.</desc>
+            <defs>
+              <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 10 5 0 10z" style="fill: oklch(0.4 0.02 52)"/>
+              </marker>
+            </defs>
+
+            <rect class="box" x="16" y="30" width="96" height="56" rx="10"/>
+            <text x="64" y="54" text-anchor="middle">Metin</text>
+            <text x="64" y="71" text-anchor="middle" class="small">Türkçe, her hâlde</text>
+
+            <path class="arrow" d="M112 58h30"/>
+
+            <rect class="box" x="144" y="30" width="136" height="56" rx="10"/>
+            <text x="212" y="54" text-anchor="middle">Normalleştirici</text>
+            <text x="212" y="71" text-anchor="middle" class="small">sayı, tarih, kısaltma</text>
+
+            <path class="arrow" d="M280 58h30"/>
+
+            <rect class="box box--accent" x="312" y="22" width="196" height="72" rx="10"/>
+            <text x="410" y="48" text-anchor="middle">Karakter kodlayıcı</text>
+            <text x="410" y="65" text-anchor="middle" class="small">gömme + sinüzoidal konum</text>
+            <text x="410" y="80" text-anchor="middle" class="small">4 ConvNeXt bloğu · boyut 768</text>
+
+            <path class="arrow" d="M508 58h30"/>
+
+            <rect class="box" x="540" y="30" width="150" height="56" rx="10"/>
+            <text x="615" y="54" text-anchor="middle">Süre başlığı</text>
+            <text x="615" y="71" text-anchor="middle" class="small">havuz → log toplam çerçeve</text>
+
+            <path class="arrow arrow--dashed" d="M615 86v40H80v58"/>
+            <text x="350" y="120" text-anchor="middle" class="small">çerçeve sayısı</text>
+
+            <path class="arrow" d="M410 94v112"/>
+            <text x="425" y="150" class="small">çapraz dikkat anahtarları</text>
+
+            <rect class="box" x="16" y="184" width="128" height="64" rx="10"/>
+            <text x="80" y="210" text-anchor="middle">Gürültü</text>
+            <text x="80" y="227" text-anchor="middle" class="small">T × 100 mel çerçevesi</text>
+
+            <path class="arrow" d="M144 216h44"/>
+
+            <rect class="box box--ink" x="190" y="170" width="300" height="92" rx="12"/>
+            <text x="340" y="196" text-anchor="middle" class="on-ink">16 akış bloğu · boyut 768 · 12 kafa</text>
+            <text x="340" y="216" text-anchor="middle" class="on-ink small">öz dikkat → çapraz dikkat → SwiGLU (3072)</text>
+            <text x="340" y="232" text-anchor="middle" class="on-ink small">zaman adımı bağlamından 9 yollu adaLN modülasyonu</text>
+            <text x="340" y="248" text-anchor="middle" class="on-ink small">sıfır başlatılmış darboğaz adaptörü (128) + stil vektörü</text>
+
+            <path class="arrow" d="M490 216h44"/>
+
+            <rect class="box box--accent" x="536" y="184" width="118" height="64" rx="10"/>
+            <text x="595" y="210" text-anchor="middle">Mel</text>
+            <text x="595" y="227" text-anchor="middle" class="small">100 bant · hop 256</text>
+
+            <path class="arrow" d="M654 216h44"/>
+
+            <rect class="box box--sage" x="700" y="184" width="118" height="64" rx="10"/>
+            <text x="759" y="210" text-anchor="middle">BigVGAN v2</text>
+            <text x="759" y="227" text-anchor="middle" class="small">donmuş, MIT</text>
+
+            <path class="arrow" d="M818 216h44"/>
+
+            <rect class="box" x="864" y="184" width="80" height="64" rx="10"/>
+            <text x="904" y="210" text-anchor="middle">Ses</text>
+            <text x="904" y="227" text-anchor="middle" class="small">24 kHz</text>
+
+            <rect class="box" x="190" y="288" width="300" height="34" rx="8"/>
+            <text x="340" y="310" text-anchor="middle" class="small">zaman adımı t · konuşmacı gömmesi (256) · 6 boyutlu prozodi · CFG metin 4,0 / konuşmacı 1,0</text>
+            <path class="arrow arrow--dashed" d="M340 288v-24"/>
+
+            <text x="595" y="292" text-anchor="middle" class="small">Euler, 32 adım</text>
+            <text x="595" y="306" text-anchor="middle" class="small">sway −0,8 · mel kırpma 5,0</text>
+            <path class="arrow arrow--dashed" d="M595 280v-30"/>
+          </svg>
+          <figcaption id="diagram-caption" class="diagram-caption">Çıkarımda sinyal akışı. Konuşmacı ve prozodi koşullaması yalnızca ince ayarlı kontrol noktasında vardır; temel kontrol noktasında yalnızca konuşmacı kimliği 0 bulunur. 8’de en iyi seçimi tüm yolu sarar ve isteğe bağlıdır.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <caption>turkish-v2 üzerinde otomatik ölçümler (120 istem, Whisper-large-v3 CER/WER, WavLM x-vektör benzerliği)</caption>
+            <thead>
+              <tr>
+                <th scope="col">Sistem</th>
+                <th scope="col" class="num">CER ort.</th>
+                <th scope="col" class="num">CER p90</th>
+                <th scope="col" class="num">WER ort.</th>
+                <th scope="col" class="num">Benzerlik ort.</th>
+                <th scope="col" class="num">Benzerlik p10</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Temel v3 @100k, koşulsuz, tek tohum</th>
+                <td class="num">0,1835</td><td class="num">0,4049</td><td class="num">0,3952</td><td class="num">0,8162*</td><td class="num">0,625*</td>
+              </tr>
+              <tr>
+                <th scope="row">v5 tutarlılık @6000, tek tohum</th>
+                <td class="num">0,0840</td><td class="num">0,2325</td><td class="num">0,1870</td><td class="num">0,9315</td><td class="num">0,8913</td>
+              </tr>
+              <tr>
+                <th scope="row">v5 8’de en iyi (tını kapılı, w = 0,05)</th>
+                <td class="num">0,0375</td><td class="num">0,1127</td><td class="num">0,1059</td><td class="num">0,9423</td><td class="num">0,9113</td>
+              </tr>
+              <tr class="is-release">
+                <th scope="row">Antalia 1 (adaptör v2 @1400), tek tohum</th>
+                <td class="num">0,0528</td><td class="num">0,1348</td><td class="num">0,1297</td><td class="num">0,9331</td><td class="num">0,9054</td>
+              </tr>
+              <tr class="is-release">
+                <th scope="row">Antalia 1 8’de en iyi (tını kapılı)</th>
+                <td class="num">0,0298</td><td class="num">0,1007</td><td class="num">0,0934</td><td class="num">0,9445</td><td class="num">0,9170</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="table-note">* Temel modelin benzerliği, hiç görmediği yayımlanan sese karşı ölçülmüştür; yalnızca doğrulayıcının tabanı olarak verilmiştir. 0,93’ün üzerindeki benzerlik değerleri insan kimlik yargılarıyla örtüşmedi (bkz. İnsan dinleme değerlendirmesi).</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="run" aria-labelledby="run-title">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Yerelde çalıştırın</p>
+          <h2 id="run-title">Bir cümle sentezleyin</h2>
+          <p>Hiçbir şey barındırılmıyor. Yükleyici, kontrol noktasını Hugging Face’ten, vocoder’ı <code>nvidia/bigvgan_v2_24khz_100band_256x</code> deposundan çeker. GPU önerilir; bu sayfadaki sayılar A100 üzerinde ölçüldü.</p>
+        </div>
+        <ol class="run-steps">
+          <li>
+            <p>Depoyu klonlayın ve paketi kurun.</p>
+<pre><code>git clone https://github.com/0daycloud/antalia
+cd antalia
+uv sync            <span class="cm"># veya: pip install -e .</span></code></pre>
+          </li>
+          <li>
+            <p>BigVGAN kaynak ağacını kurun. Vocoder yeniden dağıtılmaz: depo <code>7d2b4545</code> commit’ini sabitler ve tek satırlık bir <code>huggingface_hub</code> uyumluluk yaması içerir. README’deki “Vocoder” bölümünü izleyin.</p>
+<pre><code><span class="cm"># BigVGAN source tree (pinned commit + one-line hub patch), see README "Vocoder"</span></code></pre>
+          </li>
+          <li>
+            <p>Sentezleyin.</p>
+<pre><code>python scripts/synthesize-crossflow.py \
+  --checkpoint cloud0day3/antalia-1 \
+  --vocoder nvidia/bigvgan_v2_24khz_100band_256x \
+  --speaker voicedata-candidate-b \
+  --text "Merhaba" \
+  --output merhaba.wav</code></pre>
+          </li>
+        </ol>
+        <p class="table-note"><code>--checkpoint</code> bir Hub depo kimliği, yerel bir yayın dizini veya bir eğitim <code>.pt</code> dosyası kabul eder. 8’de en iyi seçimi için <code>--seed-candidates 8</code> ile tohum adayları üretin ve ağırlık deposundaki <code>timbre-profile.json</code> ile <code>envelope-stats.json</code> dosyalarını kullanarak <code>scripts/select-best-of-n.py</code> çalıştırın.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div>
+          <h2>Lisans</h2>
+          <p>Kod: <a href="https://github.com/0daycloud/antalia">Apache-2.0</a>. Ağırlıklar: kullanım kısıtlamalı OpenRAIL-M — kimliğe bürünme, dolandırıcılık, aldatma veya siyasi otomatik arama yok; yapay zekâ ile üretildiğinin açıklanması zorunlu.</p>
+          <p>“Antalia” tescilsiz bir addır. İlgisiz bir İtalyan işletmesi olan ANTALIA AI mevcuttur; bu projenin onunla bir bağı yoktur.</p>
+        </div>
+        <div>
+          <h2>Yazarlar</h2>
+          <p>Sezgin Saygili, Emre Kaplaner, Oncel Ozgul, Fikri San Koktas — <a href="https://patientdesk.ai">Patientdesk.ai</a>.</p>
+          <p>İletişim: <a href="mailto:sezgin@patientdesk.ai">sezgin@patientdesk.ai</a> veya <a href="https://github.com/0daycloud/antalia/issues">GitHub issues</a>. Geliştirme durdu; topluluk katkıları (PR) kabul edilir, yol haritası yoktur.</p>
+        </div>
+        <div>
+          <h2>Teşekkür</h2>
+          <p>Ses, açık ağırlıkları kapsayan bir yeniden dağıtım ek sözleşmesi imzalayan ve anonim kalmayı seçen profesyonel bir Türk seslendirme sanatçısına aittir. Ham kayıtları yayımlanmamıştır.</p>
+          <p>Temel veri: <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> 26.0 Türkçe ve FLEURS. Vocoder: <a href="https://huggingface.co/nvidia/bigvgan_v2_24khz_100band_256x">NVIDIA BigVGAN v2</a> (MIT), değiştirilmeden kullanıldı.</p>
+        </div>
+        <div>
+          <h2>Yayınlar</h2>
+          <p><a href="https://huggingface.co/cloud0day3/antalia-1">cloud0day3/antalia-1</a> — ince ayarlı ses modeli, 1,22 GB fp32.</p>
+          <p><a href="https://huggingface.co/cloud0day3/antalia-1-foundation">cloud0day3/antalia-1-foundation</a> — konuşmacıdan bağımsız temel, 1,20 GB fp32.</p>
+          <p><a href="https://github.com/0daycloud/antalia">github.com/0daycloud/antalia</a> — model, eğitim, seçim ve değerlendirme kodu. arXiv’de <a href="https://arxiv.org/abs/TODO">teknik rapor</a>.</p>
+        </div>
+      </div>
+      <div class="disclosure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
+        <p>Bu sayfadaki tüm sesler yapay zekâ ile üretilmiştir. Hiçbiri gerçek bir kişinin kaydı değildir.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../app.js" defer></script>
+</body>
+</html>
