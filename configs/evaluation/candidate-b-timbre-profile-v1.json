@@ -1,0 +1,58 @@
+{
+  "band_edges_hz": [
+    0,
+    200,
+    400,
+    700,
+    1000,
+    1500,
+    2200,
+    3200,
+    4700,
+    6800,
+    10000,
+    12000
+  ],
+  "clips": 13,
+  "candidate_mean": [
+    12.6329,
+    17.167,
+    18.2045,
+    10.1096,
+    2.4963,
+    3.4848,
+    -2.7751,
+    -8.6226,
+    -13.5829,
+    -14.8454,
+    -24.269
+  ],
+  "candidate_std": [
+    1.4089,
+    1.2938,
+    1.1353,
+    2.3684,
+    2.5941,
+    1.4717,
+    2.2903,
+    1.6823,
+    2.2001,
+    2.0744,
+    2.9324
+  ],
+  "sources": [
+    "reports/cmos-session-v1/trials/trial-01-B.wav",
+    "reports/cmos-session-v1/trials/trial-02-B.wav",
+    "reports/cmos-session-v1/trials/trial-04-A.wav",
+    "reports/cmos-session-v1/trials/trial-16-B.wav",
+    "reports/cmos-session-v1/trials/trial-17-A.wav",
+    "reports/cmos-session-v1/trials/trial-19-A.wav",
+    "reports/cmos-session-v1/trials/trial-20-B.wav",
+    "reports/cmos-session-v1/trials/trial-22-B.wav",
+    "reports/cmos-session-v1/trials/trial-23-A.wav",
+    "reports/cmos-session-v1/trials/trial-25-B.wav",
+    "reports/cmos-session-v1/trials/trial-29-A.wav",
+    "reports/cmos-session-v1/trials/trial-30-A.wav",
+    "artifacts/fastpitch-progress-step-3436-training-reconstruction/groundtruth-original.wav"
+  ]
+}

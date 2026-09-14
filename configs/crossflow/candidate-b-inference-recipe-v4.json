@@ -1,0 +1,72 @@
+{
+  "recipe_version": "candidate-b-guided-inference-v4",
+  "checkpoint": "/mnt/disks/tts-data/runs/crossflow-candidate-consistency-v1/model_6000.pt",
+  "checkpoint_sha256": "2d06354554aea05871b68c5c59943afa5e44d176c6259b9a927e7f1d3079cf58",
+  "vocoder": "/mnt/disks/tts-data/models/bigvgan-v2-24khz-100band-256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "prosody_source": "Voice B training-set mean of foundation-normalized prosody features",
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 32,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.0,
+  "min_seconds_per_char": 0.085,
+  "chunk_character_limit": 120,
+  "chunk_pause_seconds": 0.16,
+  "model_weights": "ema",
+  "serving": {
+    "strategy": "best-of-8 seed selection",
+    "seeds": [
+      20260803,
+      11111111,
+      22222222,
+      33333333,
+      44444444,
+      55555555,
+      66666666,
+      77777777
+    ],
+    "selection_score": "speaker_similarity - 1.0 * cer, optionally minus 0.05 * F0-envelope penalty",
+    "selector": "scripts/select-best-of-n.py",
+    "envelope_stats": "/mnt/disks/tts-data/manifests/candidate-b-envelope-stats-v1.json"
+  },
+  "evaluation": {
+    "suite": "configs/evaluation/turkish-v2.jsonl",
+    "reference_manifest": "candidate-b-scripted-complete-v1.test.jsonl",
+    "single_seed_floor_chunk": {
+      "cer_mean": 0.0601,
+      "wer_mean": 0.1528,
+      "speaker_similarity_mean": 0.9297,
+      "long_form_cer_mean": 0.0362,
+      "long_form_wer_mean": 0.1066
+    },
+    "best_of_8_plain": {
+      "cer_mean": 0.0312,
+      "cer_p90": 0.1059,
+      "wer_mean": 0.0927,
+      "wer_p90": 0.3008,
+      "speaker_similarity_mean": 0.9474,
+      "speaker_similarity_p10": 0.9218,
+      "estimated_snr_db_mean": 51.24
+    },
+    "best_of_8_envelope_gated": {
+      "cer_mean": 0.0365,
+      "wer_mean": 0.1016,
+      "speaker_similarity_mean": 0.9423,
+      "speaker_similarity_p10": 0.911,
+      "estimated_snr_db_mean": 51.595,
+      "envelope_penalty_mean": 1.3698
+    }
+  },
+  "notes": "Adds the long-form fix to recipe v3: the frozen duration head under-budgets frames for long text (measured 0.0635 seconds per character on 189-character prompts versus the 0.083 natural Candidate rate), which produced rushed, mumbled long sentences. Synthesis now splits text into clause-sized chunks of at most 120 characters at sentence and comma boundaries, renders each chunk independently with a 0.085 seconds-per-character frame floor, and joins chunks with a 160 ms pause. Long-form WER fell from 36.6 percent to 10.7 percent single-seed; each chunk is a short in-distribution generation. Chunked synthesis is incompatible with reference conditioning, which remains abandoned."
+}

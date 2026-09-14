@@ -1,0 +1,85 @@
+{
+  "recipe_version": "candidate-b-context-full-inference-v8",
+  "checkpoint": "/mnt/disks/tts-data/runs/crossflow-candidate-b-context-full-v1/model_6000.pt",
+  "checkpoint_sha256": "29cb885e319c3bde79ca5b01d00d2ad7bf01a738934438b50fcda2ede3651186",
+  "vocoder": "/mnt/disks/tts-data/models/bigvgan-v2-24khz-100band-256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "prosody_source": "Voice B training-set mean of foundation-normalized prosody features",
+  "adapter_scale": 1.0,
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 16,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.0,
+  "min_seconds_per_char": 0.085,
+  "chunk_character_limit": 120,
+  "chunk_pause_seconds": 0.16,
+  "model_weights": "ema",
+  "serving": {
+    "strategy": "deterministic standard seed; best-of-8 remains evaluation-only",
+    "seeds": [
+      20260803,
+      11111111,
+      22222222,
+      33333333,
+      44444444,
+      55555555,
+      66666666,
+      77777777
+    ],
+    "selection_score": "speaker_similarity - 1.0 * cer - 0.05 * F0-envelope penalty - 0.05 * timbre penalty",
+    "selector": "scripts/select-best-of-n.py",
+    "envelope_stats": "/mnt/disks/tts-data/manifests/candidate-b-envelope-stats-v1.json",
+    "timbre_stats": "/mnt/disks/tts-data/manifests/candidate-b-timbre-profile-v1.json",
+    "timbre_weight": 0.05
+  },
+  "evaluation": {
+    "suite": "configs/evaluation/turkish-v2.jsonl (120 prompts)",
+    "reference_manifest": "candidate-b-scripted-complete-v2.test.jsonl",
+    "context_full_v1_6000_no_reference": {
+      "cer_mean": 0.0761,
+      "wer_mean": 0.1773,
+      "speaker_similarity_mean": 0.9393,
+      "speaker_similarity_p10": 0.8918,
+      "estimated_snr_db_mean": 46.731
+    },
+    "previous_v7_adapter_16steps": {
+      "cer_mean": 0.0237,
+      "wer_mean": 0.0664,
+      "speaker_similarity_mean": 0.926,
+      "speaker_similarity_p10": 0.9037
+    },
+    "reference_conditioning_rejected": {
+      "ctx10": {
+        "cer_mean": 0.4612,
+        "wer_mean": 0.7135,
+        "speaker_similarity_mean": 0.9524,
+        "speaker_similarity_p10": 0.9279
+      },
+      "ctx15": {
+        "cer_mean": 0.4301,
+        "wer_mean": 0.6653,
+        "speaker_similarity_mean": 0.9494,
+        "speaker_similarity_p10": 0.9271
+      },
+      "ctx15_unnormalized_reference_text": {
+        "cer_mean": 0.4184,
+        "wer_mean": 0.6539,
+        "speaker_similarity_mean": 0.9499,
+        "speaker_similarity_p10": 0.9292
+      },
+      "reason": "reference prefix conditioning raises speaker similarity but destroys intelligibility (CER 0.42-0.46 vs 0.076 unconditioned); the paired-reference full fine-tune did not learn to use a prefix reference for in-domain continuation at inference"
+    }
+  },
+  "notes": "Context-full v1 full-backbone fine-tune (6000 updates, WavLM speaker-consistency training loss, 20% foundation replay) evaluated at 16 Euler steps, 120-prompt suite. Unconditioned: sim mean 0.9393 (+0.013 vs v7), sim p10 0.8918 (-0.012 vs v7), CER 0.0761 (3.2x worse than v7), WER 0.1773. Prefix-reference anchoring increases identity further but is intelligibility-fatal and is rejected. Net: not a promotion candidate; the v7 adapter recipe remains production. The speaker-consistency training objective alone did not converge identity beyond the adapter result on this data volume."
+}

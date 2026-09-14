@@ -1,0 +1,66 @@
+{
+  "recipe_version": "candidate-b-guided-inference-v3",
+  "checkpoint": "/mnt/disks/tts-data/runs/crossflow-candidate-consistency-v1/model_6000.pt",
+  "checkpoint_sha256": "2d06354554aea05871b68c5c59943afa5e44d176c6259b9a927e7f1d3079cf58",
+  "vocoder": "/mnt/disks/tts-data/models/bigvgan-v2-24khz-100band-256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "prosody_source": "Voice B training-set mean of foundation-normalized prosody features",
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 32,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.0,
+  "model_weights": "ema",
+  "serving": {
+    "strategy": "best-of-8 seed selection",
+    "seeds": [
+      20260803,
+      11111111,
+      22222222,
+      33333333,
+      44444444,
+      55555555,
+      66666666,
+      77777777
+    ],
+    "selection_score": "speaker_similarity - 1.0 * cer, optionally minus 0.05 * F0-envelope penalty",
+    "selector": "scripts/select-best-of-n.py",
+    "envelope_stats": "/mnt/disks/tts-data/manifests/candidate-b-envelope-stats-v1.json"
+  },
+  "evaluation": {
+    "suite": "configs/evaluation/turkish-v2.jsonl",
+    "reference_manifest": "candidate-b-scripted-complete-v1.test.jsonl",
+    "single_seed": {
+      "cer_mean": 0.084,
+      "wer_mean": 0.187,
+      "speaker_similarity_mean": 0.9315,
+      "speaker_similarity_p10": 0.8913
+    },
+    "best_of_8_plain": {
+      "cer_mean": 0.0492,
+      "wer_mean": 0.1213,
+      "speaker_similarity_mean": 0.9505,
+      "speaker_similarity_p10": 0.9251,
+      "estimated_snr_db_mean": 49.867
+    },
+    "best_of_8_envelope_gated": {
+      "cer_mean": 0.0547,
+      "wer_mean": 0.1294,
+      "speaker_similarity_mean": 0.9445,
+      "speaker_similarity_p10": 0.9123,
+      "estimated_snr_db_mean": 50.207,
+      "envelope_penalty_mean": 1.4306
+    }
+  },
+  "notes": "crossflow-candidate-consistency-v1 fine-tunes the CFG checkpoint with Voice B replayed at roughly forty percent of training duration, sharpening the conditional distribution around the Candidate voice; the persona-flip rate falls at the source rather than only through selection. The envelope-gated selection additionally scores each take's measured log-F0 statistics against real Voice B recordings, trading a little verifier similarity for pitch-envelope fidelity that the saturated verifier cannot see; choose between the plain and gated packages by native listening. Reference-infilling experiments (crossflow-infill-foundation-v1/v2) were abandoned: they reached the highest verifier similarity but never achieved intelligible alignment for concatenated reference-plus-target text within the available fine-tuning budget; their checkpoints and the context-conditioning code path (inert by default, fully tested) are retained."
+}

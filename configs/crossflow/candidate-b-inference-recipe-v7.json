@@ -1,0 +1,69 @@
+{
+  "recipe_version": "candidate-b-timbre-adapted-inference-v7-low-latency-candidate",
+  "checkpoint": "/mnt/disks/tts-data/runs/crossflow-candidate-b-timbre-adapter-v2/model_1400.pt",
+  "checkpoint_sha256": "4afdad63ac116340bff29f1ec5ad22267bd62e8ce5c4c758d16a6cecd3977c37",
+  "vocoder": "/mnt/disks/tts-data/models/bigvgan-v2-24khz-100band-256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "prosody_source": "Voice B training-set mean of foundation-normalized prosody features",
+  "adapter_scale": 1.0,
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 16,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.0,
+  "min_seconds_per_char": 0.085,
+  "chunk_character_limit": 120,
+  "chunk_pause_seconds": 0.16,
+  "model_weights": "ema",
+  "serving": {
+    "strategy": "deterministic standard seed; best-of-8 remains evaluation-only",
+    "seeds": [
+      20260803,
+      11111111,
+      22222222,
+      33333333,
+      44444444,
+      55555555,
+      66666666,
+      77777777
+    ],
+    "selection_score": "speaker_similarity - 1.0 * cer - 0.05 * F0-envelope penalty - 0.05 * timbre penalty",
+    "selector": "scripts/select-best-of-n.py",
+    "envelope_stats": "/mnt/disks/tts-data/manifests/candidate-b-envelope-stats-v1.json",
+    "timbre_stats": "/mnt/disks/tts-data/manifests/candidate-b-timbre-profile-v1.json",
+    "timbre_weight": 0.05
+  },
+  "evaluation": {
+    "suite": "first 12 records of configs/evaluation/turkish-v2.jsonl",
+    "reference_manifest": "candidate-b-scripted-complete-v2.test.jsonl",
+    "candidate_16_steps": {
+      "cer_mean": 0.0237,
+      "wer_mean": 0.0664,
+      "speaker_similarity_mean": 0.926,
+      "speaker_similarity_p10": 0.9037,
+      "generation_seconds": 15.7208,
+      "audio_seconds": 66.0053,
+      "real_time_factor": 0.2382
+    },
+    "baseline_32_steps": {
+      "cer_mean": 0.0254,
+      "wer_mean": 0.0664,
+      "speaker_similarity_mean": 0.9266,
+      "speaker_similarity_p10": 0.9177,
+      "generation_seconds": 28.6566,
+      "audio_seconds": 66.0053,
+      "real_time_factor": 0.4342
+    }
+  },
+  "notes": "Candidate only. Sixteen Euler steps reduce measured generation time by 45.1% on the controlled 12-prompt A100 comparison while preserving mean speaker similarity within 0.0006 and WER. The lower p10 similarity requires call-level listening before promotion. Do not route production traffic without explicit approval."
+}

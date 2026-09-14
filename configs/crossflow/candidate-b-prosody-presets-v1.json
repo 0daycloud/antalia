@@ -1,0 +1,89 @@
+{
+  "preset_version": "candidate-b-prosody-presets-v1",
+  "feature_order": [
+    "log_seconds_per_character",
+    "log_energy_mean",
+    "log_energy_std",
+    "log_f0_mean",
+    "log_f0_std",
+    "voiced_ratio"
+  ],
+  "normalization": "foundation prosody statistics from TR_Foundation_Speaker_v1_char/report.json",
+  "source": "real Voice B scripted segments grouped by campaign_category",
+  "global_mean": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "presets": {
+    "explanations_long_form": {
+      "prosody": [
+        -1.2410171,
+        1.3093031,
+        -2.3062286,
+        -1.0510336,
+        1.1147291,
+        0.7700543
+      ],
+      "segments": 130
+    },
+    "numeric_normalization": {
+      "prosody": [
+        -1.2936196,
+        1.3207576,
+        -2.2947576,
+        -0.9861897,
+        1.1199459,
+        0.6051255
+      ],
+      "segments": 119
+    },
+    "phonetic_normalization": {
+      "prosody": [
+        -1.1973811,
+        1.2606454,
+        -2.2220071,
+        -0.9618409,
+        1.055599,
+        0.4723265
+      ],
+      "segments": 135
+    },
+    "questions_confirmations": {
+      "prosody": [
+        -1.2111341,
+        0.9576683,
+        -1.7563358,
+        -0.7980609,
+        0.7466943,
+        0.3091349
+      ],
+      "segments": 119
+    },
+    "restrained_emotion": {
+      "prosody": [
+        -1.3319602,
+        1.2045456,
+        -2.1831648,
+        -1.0092945,
+        0.8422396,
+        0.3675488
+      ],
+      "segments": 116
+    },
+    "warm_voice_agent": {
+      "prosody": [
+        -1.0921407,
+        1.1287571,
+        -1.9581232,
+        -0.925344,
+        0.8672182,
+        0.7602652
+      ],
+      "segments": 83
+    }
+  }
+}

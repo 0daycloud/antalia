@@ -1,0 +1,39 @@
+{"id":"general-001","category":"general","text":"Sabah güneşi sessiz sokağın taşlarına yavaşça vuruyordu."}
+{"id":"general-002","category":"general","text":"Yeni bir beceri öğrenmek sabır, merak ve düzenli çalışma ister."}
+{"id":"general-003","category":"general","text":"Kıyıdaki küçük tekneler akşam rüzgârıyla birlikte limana döndü."}
+{"id":"general-004","category":"general","text":"Çocuklar yağmur dindikten sonra bahçede neşeyle oynamaya başladı."}
+{"id":"voice-agent-001","category":"voice_agent","text":"Size yardımcı olabilmem için randevu tarihini paylaşır mısınız?"}
+{"id":"voice-agent-002","category":"voice_agent","text":"Elbette, uygun saatleri kontrol edip hemen size bildireceğim."}
+{"id":"voice-agent-003","category":"voice_agent","text":"Kaydınızı güncelledim; başka bir konuda desteğe ihtiyacınız var mı?"}
+{"id":"voice-agent-004","category":"voice_agent","text":"Bir dakika bekleteceğim, ardından birlikte sonraki adımı tamamlarız."}
+{"id":"names-places-001","category":"names_places","text":"Zeynep, Çanakkale'den Eskişehir'e cuma sabahı trenle gidecek."}
+{"id":"names-places-002","category":"names_places","text":"Çağrı Bey, Şişli'deki Halaskargazi Caddesi'nde bizi bekliyor."}
+{"id":"names-places-003","category":"names_places","text":"Gökçe'nin paketi Iğdır üzerinden Ağrı'nın Doğubayazıt ilçesine ulaştı."}
+{"id":"names-places-004","category":"names_places","text":"İpek Hanım, Muğla'nın Köyceğiz ilçesindeki toplantıya katılacak."}
+{"id":"numeric-001","category":"numeric","text":"Randevunuz 29.10.2026 tarihinde saat 14:05 için oluşturuldu."}
+{"id":"numeric-002","category":"numeric","text":"Toplam tutar ₺1.275,50 ve indirim oranı %18 olarak görünüyor."}
+{"id":"numeric-003","category":"numeric","text":"Paket 3,75 kilogram ağırlığında ve 42 cm uzunluğundadır."}
+{"id":"numeric-004","category":"numeric","text":"Doğrulama kodunuz 583104, iletişim numaranız 02125550198."}
+{"id":"questions-001","category":"questions_confirmations","text":"Yarın sabah dokuzdaki görüşmeyi onaylıyor musunuz?"}
+{"id":"questions-002","category":"questions_confirmations","text":"Evet, verdiğiniz adresin doğru olduğunu teyit ediyorum."}
+{"id":"questions-003","category":"questions_confirmations","text":"İşlemi şimdi tamamlamamı ister misiniz, yoksa daha sonra mı arayalım?"}
+{"id":"questions-004","category":"questions_confirmations","text":"Anladım; seçiminizi değiştirmeden devam ediyoruz, doğru mu?"}
+{"id":"ack-001","category":"acknowledgement","text":"Tabii, hemen bakıyorum."}
+{"id":"ack-002","category":"acknowledgement","text":"Anladım, teşekkür ederim."}
+{"id":"ack-003","category":"acknowledgement","text":"Peki, öyle yapalım."}
+{"id":"ack-004","category":"acknowledgement","text":"Evet, sizi dinliyorum."}
+{"id":"long-001","category":"long_form","text":"Başvurunuzu tamamladıktan sonra belgeleriniz güvenli biçimde incelenecek, eksik bir bilgi görülürse size kısa bir bildirim gönderilecek ve gerekli düzeltmeyi yaptıktan sonra süreç kaldığı yerden devam edecektir."}
+{"id":"long-002","category":"long_form","text":"Sabah erkenden yola çıkan ekip önce dağ köyündeki sağlık merkezine uğradı, ardından vadinin öteki tarafındaki okula geçti ve gün batmadan önce tüm malzemeleri dikkatlice teslim ederek şehre döndü."}
+{"id":"long-003","category":"long_form","text":"Yeni sistem devreye alındığında kullanıcılar mevcut hesaplarıyla oturum açabilecek, tercihlerini yeniden düzenleyebilecek, önceki işlemlerini görüntüleyebilecek ve ihtiyaç duyduklarında destek ekibine doğrudan ulaşabilecekler."}
+{"id":"foreign-001","category":"foreign_abbreviations","text":"Dr. Ece, USB ve Wi-Fi bağlantısını kontrol ettikten sonra PDF dosyasını açtı."}
+{"id":"foreign-002","category":"foreign_abbreviations","text":"NASA'nın yeni projesi yapay zekâ ve GPS verilerini birlikte kullanıyor."}
+{"id":"foreign-003","category":"foreign_abbreviations","text":"Online toplantının bağlantısını QR koduyla paylaşabilir misiniz?"}
+{"id":"foreign-004","category":"foreign_abbreviations","text":"Profesör, Shakespeare'in eserini New York'taki konferansta tartıştı."}
+{"id":"emotion-001","category":"emotional_style","text":"Harika bir haber, sizin adınıza gerçekten çok sevindim!"}
+{"id":"emotion-002","category":"emotional_style","text":"Endişenizi anlıyorum; birlikte sakin sakin bir çözüm bulacağız."}
+{"id":"emotion-003","category":"emotional_style","text":"Ne yazık ki bugün istediğiniz saatte boş yerimiz kalmadı."}
+{"id":"emotion-004","category":"emotional_style","text":"Merak etmeyin, bu adımı dikkatlice ve güvenli biçimde tamamlayabiliriz."}
+{"id":"normalization-001","category":"adversarial_normalization","text":"Sn. Yılmaz'ın 3. randevusu 07.08.2026'da saat 09:07'de."}
+{"id":"normalization-002","category":"adversarial_normalization","text":"Fiyat %12,5 artınca 2,75 kg ürün ₺349,90 oldu."}
+{"id":"normalization-003","category":"adversarial_normalization","text":"TCMB ve TÜİK raporları 2025'in 4. çeyreğini karşılaştırıyor."}
+{"id":"normalization-004","category":"adversarial_normalization","text":"Acil durumda 112'yi, bilgi için 08501234567 numarasını arayın."}

@@ -1,0 +1,56 @@
+{
+  "recipe_version": "antalia-1-release-inference-v1",
+  "checkpoint": "cloud0day3/antalia-1",
+  "model_safetensors_sha256": "853a117ef95fa44efff785a6b674f380878da57879cb879d6d099d1e1444266e",
+  "source_checkpoint": "crossflow-candidate-b-timbre-adapter-v2/model_1400.pt",
+  "source_checkpoint_sha256": "4afdad63ac116340bff29f1ec5ad22267bd62e8ce5c4c758d16a6cecd3977c37",
+  "vocoder": "nvidia/bigvgan_v2_24khz_100band_256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [-1.2398956, 1.1943912, -2.1267404, -0.9549347, 0.9637866, 0.5145879],
+  "prosody_source": "training-set mean of foundation-normalized prosody features for the released voice",
+  "adapter_scale": 1.0,
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 32,
+  "low_latency_steps": 16,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.0,
+  "min_seconds_per_char": 0.085,
+  "chunk_character_limit": 120,
+  "chunk_pause_seconds": 0.16,
+  "model_weights": "ema",
+  "best_of_n": {
+    "seeds": [20260803, 11111111, 22222222, 33333333, 44444444, 55555555, 66666666, 77777777],
+    "selection_score": "speaker_similarity - 1.0 * cer - 0.05 * F0-envelope penalty - 0.05 * timbre penalty",
+    "selector": "scripts/select-best-of-n.py",
+    "envelope_stats": "envelope-stats.json",
+    "timbre_stats": "timbre-profile.json",
+    "timbre_weight": 0.05,
+    "envelope_weight": 0.05
+  },
+  "evaluation": {
+    "suite": "configs/evaluation/turkish-v2.jsonl",
+    "single_seed_32_steps": {
+      "cer_mean": 0.0528,
+      "cer_p90": 0.1348,
+      "wer_mean": 0.1297,
+      "speaker_similarity_mean": 0.9331,
+      "speaker_similarity_p10": 0.9054
+    },
+    "best_of_8_timbre_gated": {
+      "cer_mean": 0.0298,
+      "cer_p90": 0.1007,
+      "wer_mean": 0.0934,
+      "wer_p90": 0.2887,
+      "speaker_similarity_mean": 0.9445,
+      "speaker_similarity_p10": 0.917,
+      "estimated_snr_db_mean": 49.794,
+      "envelope_penalty_mean": 1.3579,
+      "timbre_penalty_mean": 1.9967
+    },
+    "timbre_penalty_real_voice_range": [0.47, 0.98]
+  },
+  "notes": "Champion recipe at freeze. Automated metrics use Whisper-large-v3 CER/WER and WavLM x-vector similarity; they overstate perceived identity: a native listener rated 0/12 synth-vs-real pairs as the same person (reports/cmos-session-v1). Sixteen Euler steps cut generation time by 45 percent with equal mean similarity and slightly lower p10 similarity."
+}

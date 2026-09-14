@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Sweep text/context guidance combinations for a reference-conditioned CrossFlow checkpoint.
+# Paths below refer to the original training VM; adjust them for your environment.
+set -euo pipefail
+
+CHECKPOINT="$1"
+OUTPUT_ROOT="$2"
+VOCODER=/mnt/disks/tts-data/models/bigvgan-v2-24khz-100band-256x
+SUITE=configs/evaluation/turkish-v2.jsonl
+REFERENCE_MANIFEST=/mnt/disks/tts-data/manifests/candidate-b-scripted-complete-v1/prepared/candidate-b-scripted-complete-v1.test.jsonl
+REFERENCE_AUDIO=/mnt/disks/tts-data/manifests/candidate-b-scripted-complete-v1/segments-audio/vd-scripted-0259b47d75638b889c0cf2fd-script-seg-604b8cc7428580ca.wav
+REFERENCE_TEXT='hepsi bu kadar. umarım şenlikte güzel bir hafta sonu geçirirsiniz; belki konser alanında karşılaşırız. görüşmek üzere.'
+PROFILE=(-1.2398956 1.1943912 -2.1267404 -0.9549347 0.9637866 0.5145879)
+
+run_config() {
+  local name="$1"
+  shift
+  local out="$OUTPUT_ROOT/$name"
+  if [ ! -f "$out/quality.json" ]; then
+    .venv/bin/python scripts/synthesize-crossflow.py \
+      --checkpoint "$CHECKPOINT" \
+      --speaker voicedata-candidate-b \
+      --prosody "${PROFILE[@]}" \
+      --reference-audio "$REFERENCE_AUDIO" \
+      --reference-text "$REFERENCE_TEXT" \
+      --sway -0.8 --steps 32 --mel-clamp 5.0 \
+      --evaluation-suite "$SUITE" \
+      --output-dir "$out/synthesis" \
+      --vocoder "$VOCODER" \
+      "$@" >/dev/null
+    .venv/bin/turkish-tts baseline evaluate \
+      --synthesis-report "$out/synthesis/crossflow.synthesis.json" \
+      --reference-manifest "$REFERENCE_MANIFEST" \
+      --output "$out/quality.json" \
+      --device cuda >/dev/null 2>&1
+  fi
+  python3 - "$name" "$out/quality.json" <<'EOF'
+import json, sys
+name, path = sys.argv[1], sys.argv[2]
+summary = json.load(open(path))["summary"]
+print(
+    f"RESULT {name} cer={summary['cer_mean']} wer={summary['wer_mean']} "
+    f"sim={summary['speaker_similarity_mean']} sim_p10={summary['speaker_similarity_p10']} "
+    f"snr={summary['estimated_snr_db_mean']}"
+)
+EOF
+}
+
+run_config text40-ctx10 --text-guidance 4.0
+run_config text20-ctx15 --text-guidance 2.0 --context-guidance 1.5
+run_config text40-ctx15 --text-guidance 4.0 --context-guidance 1.5
+run_config text20-ctx20 --text-guidance 2.0 --context-guidance 2.0
+echo SWEEP-DONE

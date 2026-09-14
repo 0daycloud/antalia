@@ -1,0 +1,60 @@
+{
+  "version": "crossflow-production-v1",
+  "warmup": {
+    "runs": 2,
+    "text": "Merhaba, size nasıl yardımcı olabilirim?"
+  },
+  "duration_tolerance_ratio": 0.35,
+  "concurrency": {
+    "levels": [1, 2, 4],
+    "requests_per_level": 4,
+    "scenario_id": "duration-005"
+  },
+  "scenarios": [
+    {
+      "id": "duration-005",
+      "category": "latency",
+      "target_seconds": 5,
+      "expect_success": true,
+      "text": "Talebinizi kontrol ettim. Uygun randevu saatlerini şimdi birlikte değerlendirebiliriz."
+    },
+    {
+      "id": "duration-030",
+      "category": "long_form",
+      "target_seconds": 30,
+      "expect_success": true,
+      "text": "Başvurunuz sisteme ulaştı ve ilk kontrol başarıyla tamamlandı. Belgeleriniz ilgili ekip tarafından sırayla incelenecek. Eksik veya güncel olmayan bir bilgi görülürse telefonunuza kısa bir bildirim göndereceğiz. Bildirimdeki bağlantıyı kullanarak düzeltmeyi yaptıktan sonra işlem kaldığı yerden devam edecek. Sonucu ayrıca e-posta adresinizden takip edebilirsiniz."
+    },
+    {
+      "id": "duration-090",
+      "category": "long_form",
+      "target_seconds": 90,
+      "expect_success": true,
+      "text": "Yeni hizmete geçiş sürecini adım adım açıklayayım. Öncelikle mevcut hesabınızla oturum açacak ve iletişim bilgilerinizin güncel olup olmadığını kontrol edeceksiniz. Ardından tercihlerinizi yeniden düzenleyebilir, daha önce tamamladığınız işlemleri görüntüleyebilir ve bekleyen taleplerinizin durumunu inceleyebilirsiniz. Sistem sizden ek bir doğrulama isterse telefonunuza gönderilen altı haneli kodu ilgili alana girmeniz yeterli olacak. Kod birkaç dakika içinde ulaşmazsa yeni kod isteyebilir veya destek ekibine bağlanabilirsiniz. Bütün bilgiler doğrulandıktan sonra değişiklikler güvenli biçimde kaydedilecek ve işlem özetiniz e-posta adresinize gönderilecek. Bu sırada sayfayı kapatsanız bile tamamlanan adımlar kaybolmayacak. Daha sonra aynı cihazdan veya farklı bir cihazdan yeniden giriş yaptığınızda kaldığınız yerden devam edebileceksiniz. Herhangi bir aşamada anlamadığınız bir ifade olursa yardım bölümündeki açıklamaları okuyabilir, canlı destek seçeneğini kullanabilir ya da sizi aramamız için uygun bir zaman belirleyebilirsiniz."
+    },
+    {
+      "id": "long-form-stability",
+      "category": "long_form",
+      "expect_success": true,
+      "text": "Sabah başlayan toplantıda önce geçen ayın sonuçları değerlendirildi, ardından yeni dönemin öncelikleri belirlendi. Her ekip kendi sorumluluk alanındaki riskleri açıkladı ve çözüm önerilerini paylaştı. Öğleden sonra hazırlanan ortak plan bütün katılımcılar tarafından yeniden gözden geçirildi. Son değişiklikler kaydedildikten sonra görevler sorumlulara dağıtıldı ve bir sonraki kontrol toplantısının tarihi kesinleştirildi."
+    },
+    {
+      "id": "adversarial-normalization",
+      "category": "adversarial",
+      "expect_success": true,
+      "text": "Sn. Öztürk'ün 03.11.2026 tarihli 4. randevusu saat 09:07'de; toplam tutar KDV dâhil ₺1.275,50." 
+    },
+    {
+      "id": "malformed-empty",
+      "category": "malformed",
+      "expect_success": false,
+      "text": "   "
+    },
+    {
+      "id": "malformed-control",
+      "category": "malformed",
+      "expect_success": false,
+      "text": "Geçersiz\u0000girdi"
+    }
+  ]
+}

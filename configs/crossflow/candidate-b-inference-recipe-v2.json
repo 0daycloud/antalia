@@ -1,0 +1,53 @@
+{
+  "recipe_version": "candidate-b-guided-inference-v2",
+  "checkpoint": "/mnt/disks/tts-data/runs/crossflow-cfg-foundation-v1/model_8000.pt",
+  "checkpoint_sha256": "ebfac3192be311dafcd52fc4d72bc30f9b6726a3eea5e2984562e524a8b8f7fb",
+  "vocoder": "/mnt/disks/tts-data/models/bigvgan-v2-24khz-100band-256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "prosody_source": "Voice B training-set mean of foundation-normalized prosody features",
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 32,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.0,
+  "model_weights": "ema",
+  "serving": {
+    "strategy": "best-of-4 seed selection",
+    "seeds": [
+      20260803,
+      11111111,
+      22222222,
+      33333333
+    ],
+    "selection_score": "speaker_similarity - 1.0 * cer",
+    "selector": "scripts/select-best-of-n.py"
+  },
+  "evaluation": {
+    "suite": "configs/evaluation/turkish-v2.jsonl",
+    "reference_manifest": "candidate-b-scripted-complete-v1.test.jsonl",
+    "single_seed": {
+      "cer_mean": 0.0813,
+      "wer_mean": 0.1691,
+      "speaker_similarity_mean": 0.9124,
+      "speaker_similarity_p10": 0.8603
+    },
+    "best_of_4": {
+      "cer_mean": 0.0542,
+      "wer_mean": 0.127,
+      "speaker_similarity_mean": 0.9398,
+      "speaker_similarity_p10": 0.909,
+      "estimated_snr_db_mean": 52.327
+    }
+  },
+  "notes": "Two model evaluations per flow step (conditioned plus null-text branch); with best-of-4 selection the total cost is eight model evaluations per flow step spread over four independent generations, still far below real time on an A100. Selection requires the speaker verifier and Whisper scoring pass. The mel clamp keeps guided trajectories inside the trained normalized-mel range. The crossflow-cfg-foundation-v1 checkpoint is a fine-tuned generation: its unguided speaker-zero path is no longer bit-exact with the immutable v3-normalized foundation checkpoint, which remains untouched on disk."
+}
