@@ -1,0 +1,76 @@
+{
+  "recipe_version": "antalia-1-release-inference-v2",
+  "checkpoint": "cloud0day3/antalia-1",
+  "model_safetensors_sha256": "853a117ef95fa44efff785a6b674f380878da57879cb879d6d099d1e1444266e",
+  "source_checkpoint": "crossflow-candidate-b-timbre-adapter-v2/model_1400.pt",
+  "source_checkpoint_sha256": "4afdad63ac116340bff29f1ec5ad22267bd62e8ce5c4c758d16a6cecd3977c37",
+  "vocoder": "nvidia/bigvgan_v2_24khz_100band_256x",
+  "speaker": "voicedata-candidate-b",
+  "prosody": [
+    -1.2398956,
+    1.1943912,
+    -2.1267404,
+    -0.9549347,
+    0.9637866,
+    0.5145879
+  ],
+  "prosody_source": "training-set mean of foundation-normalized prosody features for the released voice",
+  "adapter_scale": 1.0,
+  "text_guidance_scale": 4.0,
+  "speaker_guidance_scale": 1.0,
+  "sway_coefficient": -0.8,
+  "solver": "euler",
+  "steps": 32,
+  "low_latency_steps": 16,
+  "mel_clamp": 5.0,
+  "guidance_rescale": 0.5,
+  "min_seconds_per_char": 0.085,
+  "chunk_character_limit": 120,
+  "chunk_pause_seconds": 0.16,
+  "model_weights": "ema",
+  "best_of_n": {
+    "seeds": [
+      20260803,
+      11111111,
+      22222222,
+      33333333,
+      44444444,
+      55555555,
+      66666666,
+      77777777
+    ],
+    "selection_score": "speaker_similarity - 1.0 * cer - 0.05 * F0-envelope penalty - 0.05 * timbre penalty",
+    "selector": "scripts/select-best-of-n.py",
+    "envelope_stats": "envelope-stats.json",
+    "timbre_stats": "timbre-profile.json",
+    "timbre_weight": 0.05,
+    "envelope_weight": 0.05
+  },
+  "evaluation": {
+    "suite": "configs/evaluation/turkish-v2.jsonl",
+    "single_seed_32_steps": {
+      "cer_mean": 0.0528,
+      "cer_p90": 0.1348,
+      "wer_mean": 0.1297,
+      "speaker_similarity_mean": 0.9331,
+      "speaker_similarity_p10": 0.9054
+    },
+    "best_of_8_timbre_gated": {
+      "cer_mean": 0.0298,
+      "cer_p90": 0.1007,
+      "wer_mean": 0.0934,
+      "wer_p90": 0.2887,
+      "speaker_similarity_mean": 0.9445,
+      "speaker_similarity_p10": 0.917,
+      "estimated_snr_db_mean": 49.794,
+      "envelope_penalty_mean": 1.3579,
+      "timbre_penalty_mean": 1.9967
+    },
+    "timbre_penalty_real_voice_range": [
+      0.47,
+      0.98
+    ]
+  },
+  "notes": "v2 over release-v1: guidance_rescale 0.0 -> 0.5 and pin_noise_envelope on. Measured on the shipped checkpoint, 40 prompts x 8 seeds (reports/speaker-guidance-2026-09-15.md): between-seed timbre drift 1.548 -> 1.520 and CER 0.0651 -> 0.0615 against the pinned-only control; the unpinned shipped recipe measured 2.088 / 0.0717. Speaker guidance above 1.0 lowers drift further (1.088 at 2.0, below the 1.414 human reference) but costs CER (0.0915 at 1.5, 0.1632 at 2.0) and stays at 1.0.",
+  "pin_noise_envelope": true
+}

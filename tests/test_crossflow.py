@@ -387,6 +387,26 @@ def test_chunk_text_splits_long_sentences_at_clause_boundaries() -> None:
     assert _chunk_text(unbreakable, 90) == [unbreakable]
 
 
+def test_chunk_text_normalizes_before_splitting_so_abbreviation_dots_do_not_pause() -> None:
+    from turkish_tts.crossflow_train import _chunk_text
+
+    text = "Sn. Kaya ve Dr. Demir erken geldi. Sonra hemen gitti."
+    chunks = _chunk_text(text, 40)
+    assert "doktor demir" in chunks[0]
+    assert not any(chunk.endswith(("sn.", "dr.")) for chunk in chunks)
+
+
+def test_synthesis_text_drops_characters_the_model_never_saw() -> None:
+    from turkish_tts.crossflow_train import validate_crossflow_synthesis_text
+
+    tokenizer = CharacterTokenizer.from_texts(["merhaba dünya "])
+    normalized, encoded = validate_crossflow_synthesis_text("merhaba ø dünya", tokenizer, max_text_tokens=64)
+    assert normalized == "merhaba  dünya"
+    assert tokenizer.symbol_to_id["<unk>"] not in encoded
+    with pytest.raises(ValueError, match="no characters the model knows"):
+        validate_crossflow_synthesis_text("øßñ", tokenizer, max_text_tokens=64)
+
+
 def test_reference_region_ends_at_reference_mel() -> None:
     torch.manual_seed(67)
     model = CrossFlow(

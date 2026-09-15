@@ -153,7 +153,7 @@ class _StubVocoder:
 
 def test_candidate_synthesis_prunes_first_chunk_and_keeps_seed_identity(tmp_path: Path) -> None:
     model = _tiny_model()
-    tokenizer = CharacterTokenizer.from_texts(["merhaba dünya iyi günler"])
+    tokenizer = CharacterTokenizer.from_texts(["merhaba dünya. iyi günler."])
     train_config = CrossFlowTrainConfig(
         run_version="prune-check",
         train_arrow=str(tmp_path / "train.arrow"),
