@@ -122,7 +122,9 @@ candidate-b-timbre-adapter-v2.json     (1,400 updates, released)
 ## License
 
 Code: Apache-2.0. Model weights: Antalia Open RAIL-M — no impersonation, fraud, deception,
-political robocalls, or use without AI-disclosure disclosure. See HF model cards.
+political robocalls, or use without AI disclosure, and anything that uses or redistributes the
+weights must credit "Antalia 1" by Sezgin Saygili, Emre Kaplaner, Oncel Ozgul and Fikri San
+Koktas (Patientdesk.ai) with a link to the model or code repository. See the HF model cards.
 
 ## Contributing
 
