@@ -1606,6 +1606,15 @@ def validate_crossflow_synthesis_text(
     normalized = _normalize_crossflow_text(text, text_normalization)
     if not normalized:
         raise ValueError("synthesis text is empty after normalization")
+    # The vocabulary is built from training text, so <unk> never received a gradient: feeding it
+    # produces an arbitrary sound. Dropping the character is the lesser harm.
+    unknown = tokenizer.symbol_to_id["<unk>"]
+    tokens = tokenizer.encode(normalized)
+    normalized = "".join(
+        character for character, token in zip(normalized, tokens, strict=True) if token != unknown
+    ).strip()
+    if not normalized:
+        raise ValueError("synthesis text contains no characters the model knows")
     encoded = tokenizer.encode(normalized)
     if len(encoded) > max_text_tokens:
         raise ValueError(f"synthesis text has {len(encoded)} tokens; maximum is {max_text_tokens}")
@@ -1726,9 +1735,13 @@ def _resolve_chunk_prosody(
     return blend_prosody_preset(auto_style["payload"], style, float(auto_style["strength"]))
 
 
-def _chunk_text(text: str, limit: int) -> list[str]:
-    """Split text into clause-sized chunks no longer than `limit` characters where possible."""
-    stripped = text.strip()
+def _chunk_text(text: str, limit: int, text_normalization: str = "turkish") -> list[str]:
+    """Split text into clause-sized chunks no longer than `limit` characters where possible.
+
+    Normalizes first: splitting raw text would break at the dot in "Dr. Kaya" and insert a
+    pause mid-phrase, whereas the expanded "doktor kaya" has no dot to split on.
+    """
+    stripped = _normalize_crossflow_text(text.strip(), text_normalization)
     if limit <= 0 or len(stripped) <= limit:
         return [stripped]
     sentences = re.split(r"(?<=[.!?;:])\s+", stripped)
@@ -1867,7 +1880,7 @@ def _synthesize_loaded_crossflow(
             raise RuntimeError(f"synthesized waveform is implausibly short: {waveform.size} samples")
         return waveform, normalized, math.exp(float(predicted_log_frames.item()))
 
-    chunks = _chunk_text(text, chunk_character_limit)
+    chunks = _chunk_text(text, chunk_character_limit, text_normalization)
     if len(chunks) == 1:
         return render(chunks[0], seed)
     pause = np.zeros(int(chunk_pause_seconds * sample_rate), dtype=np.float32)
@@ -2164,7 +2177,7 @@ def _synthesize_loaded_crossflow_candidates(
             waveforms.append(waveform)
         return waveforms, normalized, float(predicted), kept
 
-    chunks = _chunk_text(text, chunk_character_limit)
+    chunks = _chunk_text(text, chunk_character_limit, text_normalization)
     pause = np.zeros(int(chunk_pause_seconds * sample_rate), dtype=np.float32)
     active_seeds = list(seeds)
     per_candidate_parts: list[list[Any]] = []
