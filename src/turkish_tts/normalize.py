@@ -5,6 +5,14 @@ import re
 import unicodedata
 
 _WHITESPACE = re.compile(r"\s+")
+# A digit glued to a letter ("A4", "mp3", "COVID19", "5kg") escapes every \b-anchored number rule
+# below, so the digit reaches the model raw. The v3 vocabulary shows the damage: it holds 0-6 and 9
+# only because such leaks occurred in training text, and never saw 7 or 8 at all.
+_LETTER_THEN_DIGIT = re.compile(r"(?<=[^\W\d_])(?=\d)")
+_DIGIT_THEN_LETTER = re.compile(r"(?<=\d)(?=[^\W\d_])")
+# Once split, the letter half of "A4" or "5G" is a lone capital that the 2-6 letter initialism
+# rule would leave as a bare grapheme; it is read by name, like the multi-letter case.
+_LONE_LETTER_BY_DIGIT = re.compile(r"\b([A-ZÇĞİÖŞÜQWX])(?= \d)|(?<=\d )([A-ZÇĞİÖŞÜQWX])\b")
 _COMPARISON_PUNCTUATION = re.compile(r"[^a-zçğıöşü0-9']+")
 _CTC_PUNCTUATION = re.compile(r"[^a-zçğıöşüqwx ]+")
 _APOSTROPHES = str.maketrans({"’": "'", "‘": "'", "`": "'", "´": "'"})
@@ -151,6 +159,8 @@ def normalize_for_ctc_alignment(text: str) -> str:
 
 def normalize_for_model(text: str) -> str:
     normalized = normalize_orthography(text)
+    normalized = _DIGIT_THEN_LETTER.sub(" ", _LETTER_THEN_DIGIT.sub(" ", normalized))
+    normalized = _LONE_LETTER_BY_DIGIT.sub(lambda match: _LETTER_NAMES[match[1] or match[2]], normalized)
     normalized = re.sub(r"\b(\d{1,2})[./-](\d{1,2})[./-](\d{4})\b", _replace_date, normalized)
     normalized = re.sub(r"([₺$€])\s*((?:\d{1,3}(?:\.\d{3})+)|\d+)(?:[,.](\d{1,2}))?", _replace_currency, normalized)
     normalized = re.sub(r"%\s*(\d+(?:[,.]\d+)?)", lambda match: f"yüzde {_numeric_to_words(match[1])}", normalized)
@@ -188,7 +198,8 @@ def number_to_words(number: int) -> str:
         hundreds, remainder = divmod(number, 100)
         prefix = "yüz" if hundreds == 1 else f"{_ONES[hundreds]} yüz"
         return prefix if not remainder else f"{prefix} {number_to_words(remainder)}"
-    for scale, label in ((1_000_000_000, "milyar"), (1_000_000, "milyon"), (1_000, "bin")):
+    scales = ((1_000_000_000_000, "trilyon"), (1_000_000_000, "milyar"), (1_000_000, "milyon"), (1_000, "bin"))
+    for scale, label in scales:
         if number >= scale:
             count, remainder = divmod(number, scale)
             prefix = label if scale == 1_000 and count == 1 else f"{number_to_words(count)} {label}"
