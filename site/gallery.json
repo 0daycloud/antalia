@@ -36,7 +36,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9488,
-        "asr_text": "Elbette notumu aldım."
+        "asr_text": "Elbette notumu aldım.",
+        "seconds": 3.25
       },
       "selected": {
         "audio": "ack-005-selected.wav",
@@ -45,7 +46,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9462,
         "timbre_penalty": 2.9903,
-        "envelope_penalty": 1.5834
+        "envelope_penalty": 1.5834,
+        "seconds": 3.25
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0
@@ -61,7 +63,8 @@
         "cer": 0.1724,
         "wer": 0.3333,
         "speaker_similarity": 0.859,
-        "asr_text": "Haklısınızsınız. Şimdi düzeltiyorum."
+        "asr_text": "Haklısınızsınız. Şimdi düzeltiyorum.",
+        "seconds": 4.04
       },
       "selected": {
         "audio": "ack-006-selected.wav",
@@ -70,7 +73,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9328,
         "timbre_penalty": 1.9615,
-        "envelope_penalty": 0.2905
+        "envelope_penalty": 0.2905,
+        "seconds": 4.04
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.1724
@@ -86,7 +90,8 @@
         "cer": 0.129,
         "wer": 0.1667,
         "speaker_similarity": 0.929,
-        "asr_text": "1-3 ölçek şurubu 5-7 yaş grubuna günlüğünde de 2 kez veriniz."
+        "asr_text": "1-3 ölçek şurubu 5-7 yaş grubuna günlüğünde de 2 kez veriniz.",
+        "seconds": 5.35
       },
       "selected": {
         "audio": "normalization-007-selected.wav",
@@ -95,7 +100,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9432,
         "timbre_penalty": 2.4331,
-        "envelope_penalty": 1.2578
+        "envelope_penalty": 1.2578,
+        "seconds": 5.35
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.129
@@ -111,7 +117,8 @@
         "cer": 0.1235,
         "wer": 0.2,
         "speaker_similarity": 0.9708,
-        "asr_text": "M1250 arasındaki dönem yaklaşık 4,5 asır sürdü."
+        "asr_text": "M1250 arasındaki dönem yaklaşık 4,5 asır sürdü.",
+        "seconds": 8.04
       },
       "selected": {
         "audio": "normalization-011-selected.wav",
@@ -120,7 +127,8 @@
         "wer": 0.0667,
         "speaker_similarity": 0.9478,
         "timbre_penalty": 3.1593,
-        "envelope_penalty": 2.2421
+        "envelope_penalty": 2.2421,
+        "seconds": 8.04
       },
       "candidate_cer_min": 0.0123,
       "candidate_cer_max": 0.1235
@@ -136,7 +144,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.927,
-        "asr_text": "Maalesef başvurunuz bu aşamada onaylanmadı fakat yeniden değerlendirme isteyebilirsiniz."
+        "asr_text": "Maalesef başvurunuz bu aşamada onaylanmadı fakat yeniden değerlendirme isteyebilirsiniz.",
+        "seconds": 7.32
       },
       "selected": {
         "audio": "emotion-009-selected.wav",
@@ -145,7 +154,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9661,
         "timbre_penalty": 2.1691,
-        "envelope_penalty": 0.9445
+        "envelope_penalty": 0.9445,
+        "seconds": 7.32
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0575
@@ -161,7 +171,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.965,
-        "asr_text": "Sizi beklettiğimiz için özür dilerim. İşlemi şimdi öncelikli olarak tamamlıyorum."
+        "asr_text": "Sizi beklettiğimiz için özür dilerim. İşlemi şimdi öncelikli olarak tamamlıyorum.",
+        "seconds": 6.88
       },
       "selected": {
         "audio": "emotion-007-selected.wav",
@@ -170,7 +181,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.965,
         "timbre_penalty": 1.9101,
-        "envelope_penalty": 1.5482
+        "envelope_penalty": 1.5482,
+        "seconds": 6.88
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.1139
@@ -186,7 +198,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9135,
-        "asr_text": "WhatsApp üzerinden gönderilen JPEG dosyasını macos cihazında açamadı."
+        "asr_text": "WhatsApp üzerinden gönderilen JPEG dosyasını macos cihazında açamadı.",
+        "seconds": 5.88
       },
       "selected": {
         "audio": "foreign-012-selected.wav",
@@ -195,7 +208,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9537,
         "timbre_penalty": 3.1196,
-        "envelope_penalty": 2.2731
+        "envelope_penalty": 2.2731,
+        "seconds": 5.88
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0882
@@ -211,7 +225,8 @@
         "cer": 0.0469,
         "wer": 0.1111,
         "speaker_similarity": 0.9084,
-        "asr_text": "ECB toplantısından sonra Euro ve Dolar kuru yeni hareketlendi."
+        "asr_text": "ECB toplantısından sonra Euro ve Dolar kuru yeni hareketlendi.",
+        "seconds": 5.03
       },
       "selected": {
         "audio": "foreign-011-selected.wav",
@@ -220,7 +235,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9444,
         "timbre_penalty": 1.6515,
-        "envelope_penalty": 0.9079
+        "envelope_penalty": 0.9079,
+        "seconds": 5.03
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0781
@@ -236,7 +252,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9336,
-        "asr_text": "Sabah güneşi sessiz sokağın taşlarına yavaşça vuruyordu."
+        "asr_text": "Sabah güneşi sessiz sokağın taşlarına yavaşça vuruyordu.",
+        "seconds": 4.73
       },
       "selected": {
         "audio": "general-001-selected.wav",
@@ -245,7 +262,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9721,
         "timbre_penalty": 2.5459,
-        "envelope_penalty": 1.7753
+        "envelope_penalty": 1.7753,
+        "seconds": 4.73
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0727
@@ -261,7 +279,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9466,
-        "asr_text": "Mutfaktaki taze ekmek kokusu kısa sürede bütün eve yayıldı."
+        "asr_text": "Mutfaktaki taze ekmek kokusu kısa sürede bütün eve yayıldı.",
+        "seconds": 4.87
       },
       "selected": {
         "audio": "general-005-selected.wav",
@@ -270,7 +289,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9544,
         "timbre_penalty": 2.0779,
-        "envelope_penalty": 0.9672
+        "envelope_penalty": 0.9672,
+        "seconds": 4.87
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.1207
@@ -286,7 +306,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9587,
-        "asr_text": "Doktorunuz tahlil sonuçlarını inceledikten sonra tedavi planını güncelleyecek. Yeni reçeteniz eczane sistemine aktarılacak. Kontrol randevunuz oluşturulacak ve bütün ayrıntılar size güvenli mesaj yoluyla bildirilecektir."
+        "asr_text": "Doktorunuz tahlil sonuçlarını inceledikten sonra tedavi planını güncelleyecek. Yeni reçeteniz eczane sistemine aktarılacak. Kontrol randevunuz oluşturulacak ve bütün ayrıntılar size güvenli mesaj yoluyla bildirilecektir.",
+        "seconds": 18.68
       },
       "selected": {
         "audio": "long-006-selected.wav",
@@ -295,7 +316,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9705,
         "timbre_penalty": 1.3436,
-        "envelope_penalty": 1.5945
+        "envelope_penalty": 1.5945,
+        "seconds": 18.68
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0599
@@ -311,7 +333,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9623,
-        "asr_text": "Yeni sistem devreye alındığında kullanıcılar mevcut hesaplarıyla oturum açabilecek. Tercihlerini yeniden düzenleyebilecek. Önceki işlemlerini görüntüleyebilecek ve ihtiyaç duyduklarında destek ekibine doğrudan ulaşabilecekler."
+        "asr_text": "Yeni sistem devreye alındığında kullanıcılar mevcut hesaplarıyla oturum açabilecek. Tercihlerini yeniden düzenleyebilecek. Önceki işlemlerini görüntüleyebilecek ve ihtiyaç duyduklarında destek ekibine doğrudan ulaşabilecekler.",
+        "seconds": 18.88
       },
       "selected": {
         "audio": "long-003-selected.wav",
@@ -320,7 +343,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9616,
         "timbre_penalty": 1.3391,
-        "envelope_penalty": 0.9576
+        "envelope_penalty": 0.9576,
+        "seconds": 18.88
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.1031
@@ -336,7 +360,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9509,
-        "asr_text": "Yiğit Efe'nin dosyası Ankara'nın Çankaya ilçesindeki Mithatpaşa Caddesi'ne gönderildi."
+        "asr_text": "Yiğit Efe'nin dosyası Ankara'nın Çankaya ilçesindeki Mithatpaşa Caddesi'ne gönderildi.",
+        "seconds": 7.8
       },
       "selected": {
         "audio": "names-places-007-selected.wav",
@@ -345,7 +370,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.962,
         "timbre_penalty": 2.3531,
-        "envelope_penalty": 0.949
+        "envelope_penalty": 0.949,
+        "seconds": 7.8
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.1176
@@ -361,7 +387,8 @@
         "cer": 0.087,
         "wer": 0.25,
         "speaker_similarity": 0.9357,
-        "asr_text": "Özge, Kırk Kırklarili'nin vize ilçesinden Tekirdağ'ın Şarköy sahiline geçti."
+        "asr_text": "Özge, Kırk Kırklarili'nin vize ilçesinden Tekirdağ'ın Şarköy sahiline geçti.",
+        "seconds": 6.67
       },
       "selected": {
         "audio": "names-places-005-selected.wav",
@@ -370,7 +397,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9582,
         "timbre_penalty": 1.1008,
-        "envelope_penalty": 1.6287
+        "envelope_penalty": 1.6287,
+        "seconds": 6.67
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.1739
@@ -386,7 +414,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9511,
-        "asr_text": "İlacınızı 8 saatte bir, her seferinde 1,5 ölçek kullanmanız gerekiyor."
+        "asr_text": "İlacınızı 8 saatte bir, her seferinde 1,5 ölçek kullanmanız gerekiyor.",
+        "seconds": 6.46
       },
       "selected": {
         "audio": "numeric-012-selected.wav",
@@ -395,7 +424,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9739,
         "timbre_penalty": 1.7351,
-        "envelope_penalty": 1.3202
+        "envelope_penalty": 1.3202,
+        "seconds": 6.46
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0361
@@ -411,7 +441,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9243,
-        "asr_text": "Otobüs 6.45'te kalkacak ve yaklaşık 2 saat 35 dakika sonra varacak."
+        "asr_text": "Otobüs 6.45'te kalkacak ve yaklaşık 2 saat 35 dakika sonra varacak.",
+        "seconds": 6.67
       },
       "selected": {
         "audio": "numeric-006-selected.wav",
@@ -420,7 +451,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9577,
         "timbre_penalty": 2.6811,
-        "envelope_penalty": 0.2871
+        "envelope_penalty": 0.2871,
+        "seconds": 6.67
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.119
@@ -436,7 +468,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9676,
-        "asr_text": "Bu numaraya bilgilendirme mesajı göndermemize izin veriyor musunuz?"
+        "asr_text": "Bu numaraya bilgilendirme mesajı göndermemize izin veriyor musunuz?",
+        "seconds": 5.19
       },
       "selected": {
         "audio": "questions-007-selected.wav",
@@ -445,7 +478,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9676,
         "timbre_penalty": 2.3499,
-        "envelope_penalty": 1.0801
+        "envelope_penalty": 1.0801,
+        "seconds": 5.19
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0
@@ -461,7 +495,8 @@
         "cer": 0.0,
         "wer": 0.0,
         "speaker_similarity": 0.9611,
-        "asr_text": "İşlemi şimdi tamamlamamı ister misiniz? Yoksa daha sonra mı arayalım?"
+        "asr_text": "İşlemi şimdi tamamlamamı ister misiniz? Yoksa daha sonra mı arayalım?",
+        "seconds": 5.7
       },
       "selected": {
         "audio": "questions-003-selected.wav",
@@ -470,7 +505,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9668,
         "timbre_penalty": 1.8287,
-        "envelope_penalty": 1.4405
+        "envelope_penalty": 1.4405,
+        "seconds": 5.7
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0299
@@ -486,7 +522,8 @@
         "cer": 0.0706,
         "wer": 0.0833,
         "speaker_similarity": 0.9146,
-        "asr_text": "Kimlik doğrulaması için doğum tarihinizin yalnızca gün ve ay bilgisayarını söyler misiniz?"
+        "asr_text": "Kimlik doğrulaması için doğum tarihinizin yalnızca gün ve ay bilgisayarını söyler misiniz?",
+        "seconds": 6.88
       },
       "selected": {
         "audio": "voice-agent-005-selected.wav",
@@ -495,7 +532,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.9712,
         "timbre_penalty": 1.6533,
-        "envelope_penalty": 1.0464
+        "envelope_penalty": 1.0464,
+        "seconds": 6.88
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0706
@@ -511,7 +549,8 @@
         "cer": 0.0323,
         "wer": 0.125,
         "speaker_similarity": 0.9189,
-        "asr_text": "Size yardımcı olabilmem için randevu tarihi paylaşır mısınız?"
+        "asr_text": "Size yardımcı olabilmem için randevu tarihi paylaşır mısınız?",
+        "seconds": 5.35
       },
       "selected": {
         "audio": "voice-agent-001-selected.wav",
@@ -520,7 +559,8 @@
         "wer": 0.0,
         "speaker_similarity": 0.959,
         "timbre_penalty": 2.1452,
-        "envelope_penalty": 2.6733
+        "envelope_penalty": 2.6733,
+        "seconds": 5.35
       },
       "candidate_cer_min": 0.0,
       "candidate_cer_max": 0.0806
@@ -538,7 +578,8 @@
         "cer": 0.3208,
         "wer": 0.3636,
         "speaker_similarity": 0.9745,
-        "asr_text": "Prof. Dr. 21 Eylül 2026 tarihli erihli e-reçete no. suf 47-8-1'dir."
+        "asr_text": "Prof. Dr. 21 Eylül 2026 tarihli erihli e-reçete no. suf 47-8-1'dir.",
+        "seconds": 8.55
       },
       "selected": {
         "audio": "normalization-005-selected.wav",
@@ -547,7 +588,8 @@
         "wer": 0.2273,
         "speaker_similarity": 0.9619,
         "timbre_penalty": 1.1046,
-        "envelope_penalty": 2.4004
+        "envelope_penalty": 2.4004,
+        "seconds": 8.55
       },
       "candidate_cer_min": 0.1321,
       "candidate_cer_max": 0.3774
@@ -563,7 +605,8 @@
         "cer": 0.2432,
         "wer": 0.5556,
         "speaker_similarity": 0.8866,
-        "asr_text": "Bileğe doğaklık haklığı iponeye bağlayıp bodcaz kaydını çevrim dışı dinledim."
+        "asr_text": "Bileğe doğaklık haklığı iponeye bağlayıp bodcaz kaydını çevrim dışı dinledim.",
+        "seconds": 5.7
       },
       "selected": {
         "audio": "foreign-006-selected.wav",
@@ -572,7 +615,8 @@
         "wer": 0.3333,
         "speaker_similarity": 0.9691,
         "timbre_penalty": 1.573,
-        "envelope_penalty": 1.6951
+        "envelope_penalty": 1.6951,
+        "seconds": 5.7
       },
       "candidate_cer_min": 0.0405,
       "candidate_cer_max": 0.2432
@@ -588,7 +632,8 @@
         "cer": 0.2419,
         "wer": 1.1111,
         "speaker_similarity": 0.9781,
-        "asr_text": "W-H-O-N-C-F-E-F temsilcileri Ankara'nın kadaki panelde bir araya geldi."
+        "asr_text": "W-H-O-N-C-F-E-F temsilcileri Ankara'nın kadaki panelde bir araya geldi.",
+        "seconds": 7.09
       },
       "selected": {
         "audio": "foreign-007-selected.wav",
@@ -597,7 +642,8 @@
         "wer": 1.0,
         "speaker_similarity": 0.956,
         "timbre_penalty": 1.6757,
-        "envelope_penalty": 0.8158
+        "envelope_penalty": 0.8158,
+        "seconds": 7.09
       },
       "candidate_cer_min": 0.0968,
       "candidate_cer_max": 0.2419
@@ -613,7 +659,8 @@
         "cer": 0.234,
         "wer": 0.2727,
         "speaker_similarity": 0.9639,
-        "asr_text": "Blok 10. kat 56 için 0, 112, 559, 88'i arayın."
+        "asr_text": "Blok 10. kat 56 için 0, 112, 559, 88'i arayın.",
+        "seconds": 7.55
       },
       "selected": {
         "audio": "normalization-010-selected.wav",
@@ -622,7 +669,8 @@
         "wer": 0.1364,
         "speaker_similarity": 0.9686,
         "timbre_penalty": 1.4847,
-        "envelope_penalty": 2.3115
+        "envelope_penalty": 2.3115,
+        "seconds": 7.55
       },
       "candidate_cer_min": 0.0745,
       "candidate_cer_max": 0.3617
@@ -638,7 +686,8 @@
         "cer": 0.2326,
         "wer": 0.2222,
         "speaker_similarity": 0.9498,
-        "asr_text": "Dosya 18 MB. Ak hızı 2,4 MB sayın ve kalan süre 0,1, 30, 36."
+        "asr_text": "Dosya 18 MB. Ak hızı 2,4 MB sayın ve kalan süre 0,1, 30, 36.",
+        "seconds": 10.65
       },
       "selected": {
         "audio": "normalization-012-selected.wav",
@@ -647,7 +696,8 @@
         "wer": 0.2222,
         "speaker_similarity": 0.9498,
         "timbre_penalty": 1.0781,
-        "envelope_penalty": 1.6791
+        "envelope_penalty": 1.6791,
+        "seconds": 10.65
       },
       "candidate_cer_min": 0.1047,
       "candidate_cer_max": 0.4302
@@ -663,7 +713,8 @@
         "cer": 0.2105,
         "wer": 0.3158,
         "speaker_similarity": 0.9425,
-        "asr_text": "KED'e dahil 18.750 lira tutarın %25'i peşin ödendi."
+        "asr_text": "KED'e dahil 18.750 lira tutarın %25'i peşin ödendi.",
+        "seconds": 6.88
       },
       "selected": {
         "audio": "normalization-009-selected.wav",
@@ -672,7 +723,8 @@
         "wer": 0.3158,
         "speaker_similarity": 0.9425,
         "timbre_penalty": 1.7619,
-        "envelope_penalty": 2.342
+        "envelope_penalty": 2.342,
+        "seconds": 6.88
       },
       "candidate_cer_min": 0.1789,
       "candidate_cer_max": 0.3053
@@ -688,7 +740,8 @@
         "cer": 0.1268,
         "wer": 0.7143,
         "speaker_similarity": 0.9588,
-        "asr_text": "Ömer Faruk, Kahramanmaraş'ın 12 Şubat ilçesindeki topla yakalantıya katılacak."
+        "asr_text": "Ömer Faruk, Kahramanmaraş'ın 12 Şubat ilçesindeki topla yakalantıya katılacak.",
+        "seconds": 6.88
       },
       "selected": {
         "audio": "names-places-012-selected.wav",
@@ -697,7 +750,8 @@
         "wer": 0.7143,
         "speaker_similarity": 0.9505,
         "timbre_penalty": 1.7754,
-        "envelope_penalty": 0.9202
+        "envelope_penalty": 0.9202,
+        "seconds": 6.88
       },
       "candidate_cer_min": 0.0282,
       "candidate_cer_max": 0.2254
@@ -713,7 +767,8 @@
         "cer": 0.1077,
         "wer": 0.2727,
         "speaker_similarity": 0.9114,
-        "asr_text": "VORNEK.COM adresindeki 2 GB'lık dosyayı e-posta iletmiyor."
+        "asr_text": "VORNEK.COM adresindeki 2 GB'lık dosyayı e-posta iletmiyor.",
+        "seconds": 6.46
       },
       "selected": {
         "audio": "normalization-008-selected.wav",
@@ -722,7 +777,8 @@
         "wer": 0.3636,
         "speaker_similarity": 0.9752,
         "timbre_penalty": 1.31,
-        "envelope_penalty": 0.8635
+        "envelope_penalty": 0.8635,
+        "seconds": 6.46
       },
       "candidate_cer_min": 0.1077,
       "candidate_cer_max": 0.2923
@@ -738,7 +794,8 @@
         "cer": 0.1287,
         "wer": 0.1667,
         "speaker_similarity": 0.946,
-        "asr_text": "Toplam tutar 1275 lira 50 kuruş ve indirim oranı %18 olarak görünüyor."
+        "asr_text": "Toplam tutar 1275 lira 50 kuruş ve indirim oranı %18 olarak görünüyor.",
+        "seconds": 8.3
       },
       "selected": {
         "audio": "numeric-002-selected.wav",
@@ -747,7 +804,8 @@
         "wer": 0.1667,
         "speaker_similarity": 0.946,
         "timbre_penalty": 1.7867,
-        "envelope_penalty": 1.202
+        "envelope_penalty": 1.202,
+        "seconds": 8.3
       },
       "candidate_cer_min": 0.1287,
       "candidate_cer_max": 0.2277
@@ -761,7 +819,7 @@
       "audio": "long-unchunked.wav",
       "chunk_character_limit": 0,
       "min_seconds_per_char": 0.0,
-      "seconds": null,
+      "seconds": 9.11,
       "predicted_frames": 854.0587625261516
     },
     {
@@ -771,7 +829,7 @@
       "audio": "long-chunked.wav",
       "chunk_character_limit": 120,
       "min_seconds_per_char": 0.085,
-      "seconds": null,
+      "seconds": 34.78,
       "predicted_frames": 3215.798871680054
     },
     {
@@ -779,21 +837,24 @@
       "role": "foundation",
       "text": "Sabah güneşi sessiz sokağın taşlarına yavaşça vuruyordu.",
       "audio": "general-001-foundation.wav",
-      "model": "antalia-1-foundation"
+      "model": "antalia-1-foundation",
+      "seconds": 4.73
     },
     {
       "id": "voice-agent-001-foundation",
       "role": "foundation",
       "text": "Size yardımcı olabilmem için randevu tarihini paylaşır mısınız?",
       "audio": "voice-agent-001-foundation.wav",
-      "model": "antalia-1-foundation"
+      "model": "antalia-1-foundation",
+      "seconds": 5.35
     },
     {
       "id": "general-001-16steps",
       "role": "low_latency",
       "text": "Sabah güneşi sessiz sokağın taşlarına yavaşça vuruyordu.",
       "audio": "general-001-16steps.wav",
-      "steps": 16
+      "steps": 16,
+      "seconds": 4.73
     }
   ]
 }

@@ -4,12 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#f6f3ee">
+  <meta name="theme-color" content="#f7f4ef">
   <title>Antalia 1 — an open Turkish text-to-speech model</title>
-  <meta name="description" content="Antalia 1 is an open, single-voice Turkish text-to-speech model (~300M parameters, rectified flow, 24 kHz). Development is discontinued; weights, code and evaluation are released in full.">
+  <meta name="description" content="Antalia 1 is an open, single-voice Turkish text-to-speech model (~300M parameters, rectified flow, 24 kHz). Development is discontinued; weights, code, voice corpus and evaluation are released in full. Listen to samples with the numbers behind each one.">
   <link rel="alternate" hreflang="en" href="./">
   <link rel="alternate" hreflang="tr" href="tr/">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='4' y='15' width='4' height='10' rx='2' fill='%23a85a3a'/%3E%3Crect x='12' y='9' width='4' height='22' rx='2' fill='%23a85a3a'/%3E%3Crect x='20' y='4' width='4' height='32' rx='2' fill='%23a85a3a'/%3E%3Crect x='28' y='11' width='4' height='18' rx='2' fill='%23a85a3a'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='4' y='15' width='4' height='10' rx='2' fill='%23b0603f'/%3E%3Crect x='12' y='9' width='4' height='22' rx='2' fill='%23b0603f'/%3E%3Crect x='20' y='4' width='4' height='32' rx='2' fill='%23b0603f'/%3E%3Crect x='28' y='11' width='4' height='18' rx='2' fill='%23b0603f'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -27,10 +30,19 @@
         <span>Antalia 1</span>
         <span class="brand-status">Discontinued</span>
       </a>
+      <nav class="page-nav" aria-label="On this page">
+        <a href="#listen">Listen</a>
+        <a href="#failures">Failures</a>
+        <a href="#long-inputs">Long inputs</a>
+        <a href="#assessment">Assessment</a>
+        <a href="#listening">Listening test</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#run">Run it</a>
+      </nav>
       <nav class="site-nav" aria-label="Project links">
-        <a href="https://huggingface.co/cloud0day3/antalia-1">Weights</a>
-        <a href="https://github.com/0daycloud/antalia">Code</a>
-        <a href="https://github.com/0daycloud/antalia/blob/main/paper/main.pdf">Paper</a>
+        <a href="https://huggingface.co/cloud0day3/antalia-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span>Weights</span></a>
+        <a href="https://github.com/0daycloud/antalia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-2-12-4 16"/></svg><span>Code</span></a>
+        <a href="https://github.com/0daycloud/antalia/blob/main/paper/main.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"/></svg><span>Paper</span></a>
         <div class="lang-switch" aria-label="Language">
           <span aria-current="page" lang="en">EN</span>
           <a href="tr/" lang="tr" hreflang="tr" aria-label="Türkçe">TR</a>
@@ -41,32 +53,48 @@
 
   <main id="main" data-gallery="gallery.json" data-audio-base="audio/" data-lang="en">
 
-    <section class="hero shell" aria-labelledby="hero-title">
-      <p class="eyebrow">Open release</p>
-      <h1 id="hero-title">Antalia 1 — an open Turkish <em>text-to-speech</em> model.</h1>
-      <p class="lede">Development discontinued; released in full. One professional voice, about 300 million parameters, rectified-flow acoustic model at 24 kHz. This page lets you listen to what it does well and where it falls short, with the numbers behind each sample.</p>
-      <div class="button-row">
-        <a class="button button--dark" href="https://huggingface.co/cloud0day3/antalia-1">Get the weights on Hugging Face</a>
-        <a class="button button--ghost" href="https://github.com/0daycloud/antalia">Read the code on GitHub</a>
-        <a class="button button--ghost" href="https://github.com/0daycloud/antalia/blob/main/paper/main.pdf">Read the technical report</a>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="shell">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Open release · development discontinued</p>
+            <h1 id="hero-title">An open Turkish <em>text-to-speech</em> model, released in full.</h1>
+            <p class="lede">One professional voice, about 300 million parameters, a rectified-flow acoustic model at 24 kHz. Weights, code, the voice corpus and every evaluation result are public. This page lets you hear what it does well and where it falls short, with the numbers behind each sample.</p>
+            <div class="button-row">
+              <a class="button button--primary" href="https://huggingface.co/cloud0day3/antalia-1">Get the weights</a>
+              <a class="button button--ghost" href="https://github.com/0daycloud/antalia">Code on GitHub</a>
+              <a class="button button--ghost" href="https://github.com/0daycloud/antalia/blob/main/paper/main.pdf">Technical report</a>
+            </div>
+          </div>
+          <div class="feature" id="feature" data-feature="general-001" aria-labelledby="feature-title">
+            <div class="feature-head">
+              <p class="eyebrow" id="feature-title">Hear the voice</p>
+              <span class="tag">General · best of 8</span>
+            </div>
+            <p class="feature-sentence" data-feature-text>Sabah güneşi sessiz sokağın taşlarına yavaşça vuruyordu.</p>
+            <div data-feature-take></div>
+            <p class="feature-foot">AI-generated. Whisper transcribed it with zero character errors; speaker similarity to the real voice 0.972.</p>
+          </div>
+        </div>
+        <ul class="hero-facts" aria-label="Key facts">
+          <li><strong>304.6M</strong><span>parameters</span></li>
+          <li><strong>24 kHz</strong><span>output, 100-band mel</span></li>
+          <li><strong>5.0 h</strong><span>of the released voice</span></li>
+          <li><strong>67.55 h</strong><span>Common Voice + FLEURS foundation</span></li>
+          <li><strong>0.030</strong><span>CER, best of 8 (0.053 single seed)</span></li>
+        </ul>
       </div>
-      <ul class="hero-facts" aria-label="Key facts">
-        <li><strong>304.6M</strong> parameters</li>
-        <li><strong>24 kHz</strong> output</li>
-        <li><strong>67.55 h</strong> Common Voice + FLEURS foundation data</li>
-        <li><strong>5.0 h</strong> of the released voice</li>
-        <li><strong>Turkish</strong> only, grapheme input</li>
-      </ul>
     </section>
 
     <section class="section" id="listen" aria-labelledby="listen-title">
       <div class="shell">
         <div class="section-head">
           <p class="eyebrow">Listen</p>
-          <h2 id="listen-title">Two samples per category, raw and selected</h2>
-          <p>Twenty prompts from the 120-prompt <code>turkish-v2</code> evaluation suite, two per category. Each card plays the same sentence twice: the first random seed as generated, and the best of eight seeds chosen by an automatic score (WavLM speaker similarity minus Whisper character error rate, minus small F0-envelope and timbre penalties). CER is Whisper-large-v3 character error rate against the prompt; Sim is WavLM x-vector cosine similarity to the voice actor’s recordings. Selection costs 8× compute.</p>
+          <h2 id="listen-title">Twenty prompts, each played twice</h2>
+          <p>Two prompts from each of the ten categories in the 120-prompt <code>turkish-v2</code> evaluation suite. For every sentence you can compare the first random seed as generated with the best of eight seeds picked by an automatic score. <strong>CER</strong> is the Whisper-large-v3 character error rate against the prompt. <strong>Sim</strong> is WavLM x-vector cosine similarity to the voice actor’s recordings. Selection costs eight times the compute.</p>
         </div>
-        <div class="card-grid" id="showcase-grid" data-gallery-container></div>
+        <div class="filters" id="showcase-filters" role="group" aria-label="Filter by category"></div>
+        <div class="sample-list" id="showcase-list" data-gallery-container></div>
       </div>
     </section>
 
@@ -75,9 +103,10 @@
         <div class="section-head">
           <p class="eyebrow">Where it fails</p>
           <h2 id="failures-title">Numbers, normalization and foreign terms</h2>
-          <p>These are the prompts with the highest error rates in the suite: six were the worst single-seed results, three the worst results after selection. Some fail on one seed and are recovered by best-of-8 selection; others are not recovered by any seed within the selection score. The note under each sentence shows the CER range across all eight candidates.</p>
+          <p>The nine prompts with the highest error rates in the suite: six were the worst single-seed results, three the worst results even after selection. Under each sentence you can read what Whisper actually heard on the raw take, and see where the raw and selected takes sit within the CER range of all eight seeds.</p>
         </div>
-        <div class="card-grid" id="failures-grid" data-gallery-container></div>
+        <p class="cer-legend table-note"><span><i style="background: var(--bad)"></i>Single seed</span><span><i style="background: var(--good)"></i>Best of 8</span><span><i style="background: var(--accent-soft-2); width: 1.25rem; border-radius: 4px"></i>Range across 8 seeds</span></p>
+        <div class="sample-list" id="failures-list" data-gallery-container></div>
       </div>
     </section>
 
@@ -86,51 +115,51 @@
         <div class="section-head">
           <p class="eyebrow">Long inputs</p>
           <h2 id="long-title">One duration for the whole input</h2>
-          <p>The model predicts a single total frame count for each input from the pooled text encoding; there are no per-token durations and no aligner. On long text that prediction under-budgets: the same 370-character passage renders as 9.1 s of rushed, mumbled speech when fed in one pass, and as 34.8 s when the inference stack splits it at clause boundaries (≤120 characters, 160 ms pauses, a floor of 0.085 s per non-space character). Chunking cut long-form WER from 36.6 % to 10.7 % on a single seed.</p>
+          <p>The model predicts a single total frame count per input from the pooled text encoding. There are no per-token durations and no aligner. On long text that prediction under-budgets: the same 370-character passage renders as 9.1 s of rushed, mumbled speech in one pass, and as 34.8 s when the inference stack splits it at clause boundaries (≤120 characters, 160 ms pauses, a floor of 0.085 s per non-space character). Chunking cut long-form WER from 36.6 % to 10.7 % on a single seed.</p>
         </div>
-        <div class="card-grid" id="long-grid" data-gallery-container></div>
+        <div class="sample-list" id="long-list" data-gallery-container></div>
 
         <div class="subsection" id="foundation">
-          <h3>Foundation model, unconditioned</h3>
-          <p>Antalia 1 Foundation is the speaker-agnostic base (299.6M parameters, 100,000 updates on 67.55 h of Common Voice 26 and FLEURS Turkish). With speaker id 0 it produces an averaged voice that belongs to nobody. Single-seed CER on the suite is 0.18; these two samples are what the fine-tuning stages start from.</p>
-          <div class="card-grid" id="foundation-grid" data-gallery-container></div>
+          <h3>The foundation model, unconditioned</h3>
+          <p>Antalia 1 Foundation is the speaker-agnostic base: 299.6M parameters, 100,000 updates on 67.55 h of Common Voice 26 and FLEURS Turkish. With speaker id 0 it produces an averaged voice that belongs to nobody. Single-seed CER on the suite is 0.18. These two samples are where the fine-tuning stages start from.</p>
+          <div class="sample-list" id="foundation-list" data-gallery-container></div>
         </div>
 
         <div class="subsection" id="steps">
-          <h3>16 steps instead of 32</h3>
-          <p>Halving the Euler steps reduced generation time by 45.1 %. Mean speaker similarity stayed within 0.0006 of the 32-step recipe; the 10th-percentile similarity was lower. The release recipe uses 32 steps.</p>
-          <div class="card-grid" id="steps-grid" data-gallery-container></div>
+          <h3>16 Euler steps instead of 32</h3>
+          <p>Halving the solver steps cut generation time by 45.1 %. Mean speaker similarity stayed within 0.0006 of the 32-step recipe; the 10th-percentile similarity was lower. The release recipe uses 32 steps.</p>
+          <div class="sample-list" id="steps-list" data-gallery-container></div>
         </div>
       </div>
     </section>
 
-    <section class="section section--tint" id="works" aria-labelledby="works-title">
+    <section class="section section--tint" id="assessment" aria-labelledby="assessment-title">
       <div class="shell">
         <div class="section-head">
           <p class="eyebrow">Assessment</p>
-          <h2 id="works-title">What works, what does not</h2>
+          <h2 id="assessment-title">What works, what does not</h2>
         </div>
-        <div class="columns columns--works">
-          <div>
-            <h3 class="h3-good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>What works</h3>
+        <div class="columns">
+          <div class="panel">
+            <h3><span class="icon icon--good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>What works</h3>
             <ul class="fact-list fact-list--good">
               <li><strong>Short conversational Turkish is intelligible.</strong> Single-seed CER 0.053 across the suite (p90 0.135); best-of-8 CER 0.030 (p90 0.101).</li>
-              <li><strong>Grapheme input with a deterministic normalizer.</strong> Numbers, dates, currency and abbreviations are spelled out in code before synthesis; no phoneme dictionary is needed.</li>
+              <li><strong>Grapheme input with a deterministic normalizer.</strong> Numbers, dates, currency and abbreviations are spelled out in code before synthesis. No phoneme dictionary is needed.</li>
               <li><strong>Clause chunking makes long inputs usable.</strong> Long-form WER 36.6 % → 10.7 % with ≤120-character chunks.</li>
-              <li><strong>A frozen, transparent vocoder.</strong> BigVGAN v2 24 kHz measures within ±0.4 dB on real-mel reconstruction, so errors you hear come from the acoustic model.</li>
-              <li><strong>The release is complete.</strong> Both checkpoints, the training, selection and evaluation code, the 120-prompt suite, the listening protocol and its raw results are public. The voice actor’s recordings are not.</li>
+              <li><strong>A frozen, transparent vocoder.</strong> BigVGAN v2 24 kHz measures within ±0.4 dB on real-mel reconstruction, so the errors you hear come from the acoustic model.</li>
+              <li><strong>The release is complete.</strong> Both checkpoints, the 5.0 h voice corpus, the training, selection and evaluation code, the 120-prompt suite, the listening protocol and its raw results are all public.</li>
             </ul>
           </div>
-          <div>
-            <h3 class="h3-bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>What does not</h3>
+          <div class="panel">
+            <h3><span class="icon icon--bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span>What does not</h3>
             <ul class="fact-list fact-list--bad">
               <li><strong>Voice similarity.</strong> Automated similarity reads 0.93–0.94, but a native listener who knows the voice rated 0 of 12 synthesized-vs-real pairs as the same person. The gap is a timbre bias in the presence band (+4.0 dB at 4.7–6.8 kHz). This is the biggest limitation.</li>
-              <li><strong>Long inputs.</strong> The total-duration head under-budgets; without clause chunking (≤120 characters) and a per-character frame floor, long sentences rush and mumble.</li>
+              <li><strong>Long inputs.</strong> The total-duration head under-budgets. Without clause chunking and a per-character frame floor, long sentences rush and mumble.</li>
               <li><strong>Numbers, normalization-heavy text, foreign names and abbreviations</strong> have the highest CER. Best-of-8 partially recovers them; some prompts fail on all eight seeds.</li>
-              <li><strong>Single-seed variance is large.</strong> Per-prompt CER spreads up to 0.00–0.17 across seeds. The headline numbers depend on best-of-8 selection with Whisper and WavLM scorers, which costs 8× compute.</li>
+              <li><strong>Single-seed variance is large.</strong> Per-prompt CER spreads up to 0.00–0.17 across seeds. The headline numbers depend on best-of-8 selection with Whisper and WavLM scorers.</li>
               <li><strong>One fixed voice.</strong> No zero-shot cloning, Turkish only, 24 kHz, grapheme input.</li>
               <li><strong>No multi-listener MOS, no memorization audit, no watermark.</strong></li>
-              <li><strong>Latency.</strong> On an A100 with 32 steps and a resident model, a 5 s utterance takes about 2.1–2.3 s after warm-up; the first request about 6 s. On the cancelled Cloud Run L4 staging, time-to-first-audio was p50 5.0 s / p95 9.2 s at low load.</li>
+              <li><strong>Latency.</strong> On an A100 with 32 steps and a resident model, a 5 s utterance takes about 2.1–2.3 s after warm-up; the first request about 6 s.</li>
             </ul>
           </div>
         </div>
@@ -142,19 +171,38 @@
         <div class="section-head">
           <p class="eyebrow">Human listening</p>
           <h2 id="listening-title">One listener, twenty-seven trials, one verdict</h2>
+          <p>Automated speaker similarity should not be read as evidence of identity. The only human listening test that was run says so plainly.</p>
         </div>
-        <div class="callout">
+        <div class="listening-grid">
           <div>
-            <p>A comparative MOS session was run on 2026-08-09 with a single native listener, the project owner, who knows the voice actor’s voice. 27 non-catch trials; the 3 catch trials were rated correctly. Pooled CMOS was −0.667 ± 0.653 toward the candidate. The gated serving recipe scored +0.267 ± 0.728 against the plain recipe (n = 15). Against the real recordings, synthesized speech scored −1.833 ± 0.757 (n = 12) and the listener judged <strong>0 of 12</strong> pairs to be the same person.</p>
-            <p>Per category: emotion +2.0, general +2.0, questions +0.2, acknowledgement 0.0, long −0.5, names and places −1.0, voice agent −1.0, foreign −1.14, numeric −2.0, normalization −2.5.</p>
-            <p>The session rated the v5 predecessor checkpoint. The timbre penalty in selection and the adapter stage that became Antalia 1 were the response to it; they lowered the measured penalty from 2.585 to 1.997, still outside the real-voice range of 0.47–0.98. A ≥3-listener protocol was designed and never run. No multi-listener MOS exists for this model, and automated speaker similarity should not be read as evidence of identity.</p>
+            <dl class="stat-grid">
+              <div class="stat"><dt>Same person</dt><dd>0 / 12<small>synthesized vs real, anchored</small></dd></div>
+              <div class="stat"><dt>CMOS vs real</dt><dd>−1.83<small>± 0.76, n = 12</small></dd></div>
+              <div class="stat"><dt>Pooled CMOS</dt><dd>−0.67<small>± 0.65, n = 27</small></dd></div>
+              <div class="stat"><dt>Listeners</dt><dd>1<small>native, knows the voice</small></dd></div>
+            </dl>
+            <div class="prose">
+              <p>A comparative MOS session was run on 9 August 2026 with a single native listener, the project owner, who knows the voice actor’s voice. 27 non-catch trials; the 3 catch trials were rated correctly. The gated serving recipe scored +0.267 ± 0.728 against the plain recipe (n = 15). Against the real recordings, synthesized speech scored −1.833 ± 0.757 and the listener judged none of the 12 pairs to be the same person.</p>
+              <p>The session rated the v5 predecessor checkpoint. The timbre penalty in selection and the adapter stage that became Antalia 1 were the response: they lowered the measured timbre penalty from 2.585 to 1.997, still outside the real-voice range of 0.47–0.98. A protocol with three or more listeners was designed and never run.</p>
+            </div>
           </div>
-          <dl class="stat-grid">
-            <div class="stat"><dt>Same person</dt><dd>0 / 12<small>anchored synth vs real</small></dd></div>
-            <div class="stat"><dt>CMOS vs real</dt><dd>−1.83<small>± 0.76, n = 12</small></dd></div>
-            <div class="stat"><dt>Pooled CMOS</dt><dd>−0.67<small>± 0.65, n = 27</small></dd></div>
-            <div class="stat"><dt>Listeners</dt><dd>1<small>native, informed</small></dd></div>
-          </dl>
+          <div class="panel cmos" aria-labelledby="cmos-title">
+            <div class="cmos-head">
+              <h3 id="cmos-title">CMOS by category</h3>
+              <small>candidate vs reference, v5 checkpoint</small>
+            </div>
+            <div class="cmos-row"><span>Emotional style</span><div class="cmos-track"><div class="cmos-bar cmos-bar--pos" style="--v: 2.0"></div></div><span>+2.0</span></div>
+            <div class="cmos-row"><span>General</span><div class="cmos-track"><div class="cmos-bar cmos-bar--pos" style="--v: 2.0"></div></div><span>+2.0</span></div>
+            <div class="cmos-row"><span>Questions</span><div class="cmos-track"><div class="cmos-bar cmos-bar--pos" style="--v: 0.2"></div></div><span>+0.2</span></div>
+            <div class="cmos-row"><span>Acknowledgement</span><div class="cmos-track"><div class="cmos-bar cmos-bar--pos" style="--v: 0"></div></div><span>0.0</span></div>
+            <div class="cmos-row"><span>Long form</span><div class="cmos-track"><div class="cmos-bar cmos-bar--neg" style="--v: 0.5"></div></div><span>−0.5</span></div>
+            <div class="cmos-row"><span>Names &amp; places</span><div class="cmos-track"><div class="cmos-bar cmos-bar--neg" style="--v: 1.0"></div></div><span>−1.0</span></div>
+            <div class="cmos-row"><span>Voice agent</span><div class="cmos-track"><div class="cmos-bar cmos-bar--neg" style="--v: 1.0"></div></div><span>−1.0</span></div>
+            <div class="cmos-row"><span>Foreign terms</span><div class="cmos-track"><div class="cmos-bar cmos-bar--neg" style="--v: 1.14"></div></div><span>−1.1</span></div>
+            <div class="cmos-row"><span>Numbers</span><div class="cmos-track"><div class="cmos-bar cmos-bar--neg" style="--v: 2.0"></div></div><span>−2.0</span></div>
+            <div class="cmos-row"><span>Normalization</span><div class="cmos-track"><div class="cmos-bar cmos-bar--neg" style="--v: 2.5"></div></div><span>−2.5</span></div>
+            <div class="cmos-axis"><span></span><div><span>−2.5</span><span>0</span><span>+2.5</span></div><span></span></div>
+          </div>
         </div>
       </div>
     </section>
@@ -289,8 +337,8 @@
               </tr>
             </tbody>
           </table>
-          <p class="table-note">* Foundation similarity is measured against the released voice, which the foundation never saw; it is reported only as the verifier’s floor. Similarity numbers above 0.93 did not correspond to human identity judgements (see Human listening).</p>
         </div>
+        <p class="table-note">* Foundation similarity is measured against the released voice, which the foundation never saw; it is reported only as the verifier’s floor. Similarity above 0.93 did not correspond to human identity judgements (see Human listening).</p>
       </div>
     </section>
 
@@ -303,26 +351,38 @@
         </div>
         <ol class="run-steps">
           <li>
-            <p>Clone the repository and install the package.</p>
-<pre><code>git clone https://github.com/0daycloud/antalia
+            <div>
+              <p>Clone the repository and install the package.</p>
+              <div class="code"><pre><code>git clone https://github.com/0daycloud/antalia
 cd antalia
-uv sync            <span class="cm"># or: pip install -e .</span></code></pre>
+uv sync            <span class="cm"># or: pip install -e .</span></code></pre></div>
+            </div>
           </li>
           <li>
-            <p>Set up the BigVGAN source tree. The vocoder is not redistributed: the repository pins commit <code>7d2b4545</code> and ships a one-line <code>huggingface_hub</code> compatibility patch. Follow the “Vocoder” section of the README.</p>
-<pre><code><span class="cm"># BigVGAN source tree (pinned commit + one-line hub patch), see README "Vocoder"</span></code></pre>
+            <div>
+              <p>Set up the BigVGAN source tree. The vocoder is not redistributed: the repository pins commit <code>7d2b4545</code> and ships a one-line <code>huggingface_hub</code> compatibility patch.</p>
+              <div class="code"><pre><code>git clone https://github.com/NVIDIA/BigVGAN /opt/bigvgan
+git -C /opt/bigvgan checkout 7d2b454564a6c7d014227f635b7423881f14bdac
+patch -d /opt/bigvgan -p4 &lt; scripts/patches/bigvgan-huggingface-hub-1.patch
+export PYTHONPATH=/opt/bigvgan</code></pre></div>
+            </div>
           </li>
           <li>
-            <p>Synthesize.</p>
-<pre><code>python scripts/synthesize-crossflow.py \
-  --checkpoint cloud0day3/antalia-1 \
-  --vocoder nvidia/bigvgan_v2_24khz_100band_256x \
-  --speaker voicedata-candidate-b \
-  --text "Merhaba" \
-  --output merhaba.wav</code></pre>
+            <div>
+              <p>Synthesize with the release recipe: text guidance 4.0, sway −0.8, 32 Euler steps, clause chunking at 120 characters and the per-character frame floor.</p>
+              <div class="code"><pre><code>python scripts/synthesize-crossflow.py \
+  <span class="fl">--checkpoint</span> cloud0day3/antalia-1 \
+  <span class="fl">--vocoder</span> nvidia/bigvgan_v2_24khz_100band_256x \
+  <span class="fl">--speaker</span> voicedata-candidate-b \
+  <span class="fl">--prosody-presets</span> prosody-presets.json <span class="fl">--preset</span> warm_voice_agent \
+  <span class="fl">--text-guidance</span> 4.0 <span class="fl">--sway</span> -0.8 <span class="fl">--steps</span> 32 <span class="fl">--mel-clamp</span> 5.0 \
+  <span class="fl">--min-seconds-per-char</span> 0.085 <span class="fl">--chunk-chars</span> 120 \
+  <span class="fl">--text</span> "Merhaba, randevunuzu yarın saat on dört otuz için yeniden planladım." \
+  <span class="fl">--output</span> merhaba.wav</code></pre></div>
+            </div>
           </li>
         </ol>
-        <p class="table-note"><code>--checkpoint</code> accepts a Hub repo id, a local release directory or a training <code>.pt</code> file. For best-of-8 selection, generate seed candidates with <code>--seed-candidates 8</code> and run <code>scripts/select-best-of-n.py</code> with <code>timbre-profile.json</code> and <code>envelope-stats.json</code> from the weights repository.</p>
+        <p class="table-note"><code>--checkpoint</code> accepts a Hub repo id, a local release directory or a training <code>.pt</code> file. For best-of-8 selection, generate candidates with <code>--seed-candidates 8</code> and run <code>scripts/select-best-of-n.py</code> with <code>timbre-profile.json</code> and <code>envelope-stats.json</code> from the weights repository. <code>inference-recipe.json</code> there records the full recipe.</p>
       </div>
     </section>
   </main>
@@ -331,8 +391,15 @@ uv sync            <span class="cm"># or: pip install -e .</span></code></pre>
     <div class="shell">
       <div class="footer-grid">
         <div>
+          <h2>Artifacts</h2>
+          <p><a href="https://huggingface.co/cloud0day3/antalia-1">cloud0day3/antalia-1</a> — fine-tuned voice model, 1.22 GB fp32.</p>
+          <p><a href="https://huggingface.co/cloud0day3/antalia-1-foundation">cloud0day3/antalia-1-foundation</a> — speaker-agnostic base, 1.20 GB fp32.</p>
+          <p><a href="https://huggingface.co/datasets/cloud0day3/antalia-voice-corpus">antalia-voice-corpus</a> — 5.008 h of the voice actor’s consented speech, CC-BY-4.0.</p>
+          <p><a href="https://github.com/0daycloud/antalia">github.com/0daycloud/antalia</a> — model, training, selection and evaluation code, and the <a href="https://github.com/0daycloud/antalia/blob/main/paper/main.pdf">technical report</a>.</p>
+        </div>
+        <div>
           <h2>License</h2>
-          <p>Code: <a href="https://github.com/0daycloud/antalia">Apache-2.0</a>. Weights: OpenRAIL-M with use restrictions — no impersonation, fraud, deception or political robocalls; disclosure of AI generation is required.</p>
+          <p>Code: Apache-2.0. Weights: OpenRAIL-M with use restrictions. No impersonation, fraud, deception or political robocalls; disclosure of AI generation is required.</p>
           <p>“Antalia” is an unregistered name. An unrelated Italian business, ANTALIA AI, exists; this project is not affiliated with it.</p>
         </div>
         <div>
@@ -342,14 +409,8 @@ uv sync            <span class="cm"># or: pip install -e .</span></code></pre>
         </div>
         <div>
           <h2>Credits</h2>
-          <p>The voice belongs to a professional Turkish voice actor who signed a redistribution addendum covering open weights and chose to be credited anonymously. Her raw recordings are not released.</p>
+          <p>The voice belongs to a professional Turkish voice actor who signed a redistribution addendum covering both the open weights and her recordings, and chose to be credited anonymously.</p>
           <p>Foundation data: <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> 26.0 Turkish and FLEURS. Vocoder: <a href="https://huggingface.co/nvidia/bigvgan_v2_24khz_100band_256x">NVIDIA BigVGAN v2</a> (MIT), used unmodified.</p>
-        </div>
-        <div>
-          <h2>Artifacts</h2>
-          <p><a href="https://huggingface.co/cloud0day3/antalia-1">cloud0day3/antalia-1</a> — fine-tuned voice model, 1.22 GB fp32.</p>
-          <p><a href="https://huggingface.co/cloud0day3/antalia-1-foundation">cloud0day3/antalia-1-foundation</a> — speaker-agnostic base, 1.20 GB fp32.</p>
-          <p><a href="https://github.com/0daycloud/antalia">github.com/0daycloud/antalia</a> — model, training, selection and evaluation code. <a href="https://github.com/0daycloud/antalia/blob/main/paper/main.pdf">Technical report</a> on arXiv.</p>
         </div>
       </div>
       <div class="disclosure">
@@ -357,8 +418,7 @@ uv sync            <span class="cm"># or: pip install -e .</span></code></pre>
         <p>All audio on this page is AI-generated. None of it is a recording of a real person.</p>
       </div>
     </div>
-        <p class="corpus-note"><a href="https://huggingface.co/datasets/cloud0day3/antalia-voice-corpus">Voice corpus</a> — 5.008 h of the voice actor's consented speech, CC-BY-4.0.</p>
-</footer>
+  </footer>
 
   <script src="app.js" defer></script>
 </body>
